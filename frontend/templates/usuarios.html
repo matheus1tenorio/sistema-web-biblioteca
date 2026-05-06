@@ -25,10 +25,10 @@
         <section id="form-container">
             <h3>Cadastrar Novo Usuário</h3>
             <form id="usuario-form">
-                <input type="text" id="nome-usuario" placeholder="Nome Completo" required>
-                <input type="email" id="email-usuario" placeholder="E-mail" required>
-                <input type="text" id="matricula" placeholder="Matrícula" required>
-                <button type="submit">Cadastrar</button>
+                <input type="text" name="nome_usuario" id="nome-usuario" placeholder="Nome Completo" required>
+                <input type="email" name="email_usuario" id="email-usuario" placeholder="E-mail" required>
+                <input type="text" name="matricula" id="matricula" placeholder="Matrícula (máx 8 dígitos)" maxlength="8" pattern="\d*" title="Apenas números, até 8 dígitos" required>
+                <button type="submit">Cadastrar Usuário</button>
             </form>
         </section>
 
