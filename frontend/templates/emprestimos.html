@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empréstimos - BiblioTech</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">📚 BiblioTech</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="livros.html">Livros</a></li>
+                <li><a href="usuarios.html">Usuários</a></li>
+                <li><a href="emprestimos.html">Empréstimos</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Controle de Empréstimos</h2>
+
+        <section id="form-container">
+            <h3>Registrar Saída de Livro</h3>
+            <form id="emprestimo-form">
+                <select id="select-usuario" required>
+                    <option value="">Selecione o Usuário</option>
+                    <!-- Opções carregadas via JS futuramente -->
+                </select>
+                <select id="select-livro" required>
+                    <option value="">Selecione o Livro</option>
+                </select>
+                <input type="date" id="data-emprestimo" required title="Data de Saída">
+                <button type="submit">Registrar Empréstimo</button>
+            </form>
+        </section>
+
+        <section id="lista-container">
+            <h3>Empréstimos em Aberto</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Usuário</th>
+                        <th>Livro</th>
+                        <th>Data Saída</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Filipe de Oliveira</td>
+                        <td>O Senhor dos Anéis</td>
+                        <td>17/07/2025</td>
+                        <td>Pendente</td>
+                        <td><button style="background-color: #f39c12;">Devolver</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="../static/js/main.js"></script>
+</body>
+</html>

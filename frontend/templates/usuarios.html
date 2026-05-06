@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Usuários - BiblioTech</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">📚 BiblioTech</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="livros.html">Livros</a></li>
+                <li><a href="usuarios.html">Usuários</a></li>
+                <li><a href="emprestimos.html">Empréstimos</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Gerenciamento de Usuários (Leitores)</h2>
+
+        <section id="form-container">
+            <h3>Cadastrar Novo Usuário</h3>
+            <form id="usuario-form">
+                <input type="text" id="nome-usuario" placeholder="Nome Completo" required>
+                <input type="email" id="email-usuario" placeholder="E-mail" required>
+                <input type="text" id="matricula" placeholder="Matrícula" required>
+                <button type="submit">Cadastrar</button>
+            </form>
+        </section>
+
+        <section id="lista-container">
+            <h3>Usuários Ativos</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>E-mail</th>
+                        <th>Matrícula</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Filipe de Oliveira</td>
+                        <td>filipe@email.com</td>
+                        <td>2025001</td>
+                        <td>
+                            <button>Editar</button>
+                            <button class="btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="../static/js/main.js"></script>
+</body>
+</html>

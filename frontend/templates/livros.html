@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Livros - BiblioTech</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">📚 BiblioTech</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="livros.html">Livros</a></li>
+                <li><a href="usuarios.html">Usuários</a></li>
+                <li><a href="emprestimos.html">Empréstimos</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Gerenciamento de Acervo (Livros)</h2>
+
+        <section id="form-container">
+            <h3>Cadastrar Novo Livro</h3>
+            <form id="livro-form">
+                <input type="text" id="titulo" placeholder="Título do Livro" required>
+                <input type="text" id="autor" placeholder="Autor" required>
+                <input type="number" id="ano" placeholder="Ano de Publicação" required>
+                <button type="submit">Salvar Livro</button>
+            </form>
+        </section>
+
+        <section id="lista-container">
+            <h3>Livros Cadastrados</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Autor</th>
+                        <th>Ano</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-livros-body">
+                    <tr>
+                        <td>O Senhor dos Anéis</td>
+                        <td>J.R.R. Tolkien</td>
+                        <td>1954</td>
+                        <td>
+                            <button>Editar</button>
+                            <button class="btn-delete">Excluir</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="../static/js/main.js"></script>
+</body>
+</html>
