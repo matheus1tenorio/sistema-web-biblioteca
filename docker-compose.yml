@@ -1,0 +1,66 @@
+version: "3.9"
+
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: biblioteca-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: biblioteca
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - biblioteca-network
+
+  cliente-service:
+    build: ./cliente-service
+    container_name: cliente-service
+    ports:
+      - "5001:5000"
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: biblioteca
+    networks:
+      - biblioteca-network
+
+  livro-service:
+    build: ./livro-service
+    container_name: livro-service
+    ports:
+      - "5002:5000"
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: biblioteca
+    networks:
+      - biblioteca-network
+
+  emprestimo-service:
+    build: ./emprestimo-service
+    container_name: emprestimo-service
+    ports:
+      - "5003:5000"
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: biblioteca
+    networks:
+      - biblioteca-network
+
+networks:
+  biblioteca-network:
+    driver: bridge
