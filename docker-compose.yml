@@ -61,6 +61,17 @@ services:
     networks:
       - biblioteca-network
 
+  frontend:
+    image: nginx:alpine
+    container_name: biblioteca-frontend
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend/templates:/usr/share/nginx/html
+      - ./frontend/static:/usr/share/nginx/html/static
+    networks:
+      - biblioteca-network
+
 networks:
   biblioteca-network:
     driver: bridge
