@@ -1,7 +1,13 @@
 from flask import Blueprint, request, jsonify
-from controllers.emprestimo_controller import *
+from controllers.emprestimo_controller import (
+    listar_emprestimos,
+    criar_emprestimo,
+    devolver_livro,
+    remover_emprestimo
+)
 
 emprestimo_bp = Blueprint("emprestimo_bp", __name__)
+
 
 @emprestimo_bp.route("/emprestimos", methods=["GET"])
 def listar():
@@ -11,20 +17,18 @@ def listar():
 @emprestimo_bp.route("/emprestimos", methods=["POST"])
 def criar():
     data = request.json
-
-    criar_emprestimo(data)
-
-    return jsonify({
-        "mensagem": "Emprestimo criado com sucesso"
-    }), 201
+    resultado = criar_emprestimo(data)
+    return jsonify(resultado[0]), resultado[1]
 
 
 @emprestimo_bp.route("/emprestimos/<int:id>/devolver", methods=["PUT"])
 def devolver(id):
     data = request.json
+    resultado = devolver_livro(id, data)
+    return jsonify(resultado[0]), resultado[1]
 
-    devolver_livro(id, data)
 
-    return jsonify({
-        "mensagem": "Livro devolvido com sucesso"
-    }), 200
+@emprestimo_bp.route("/emprestimos/<int:id>", methods=["DELETE"])
+def excluir(id):
+    resultado = remover_emprestimo(id)
+    return jsonify(resultado[0]), resultado[1]
