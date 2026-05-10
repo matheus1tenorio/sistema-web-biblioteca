@@ -2,9 +2,8 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciar Usuários - BiblioTech</title>
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
@@ -23,12 +22,13 @@
         <h2>Gerenciamento de Usuários (Leitores)</h2>
 
         <section id="form-container">
-            <h3>Cadastrar Novo Usuário</h3>
+            <h3 id="form-titulo">Cadastrar Novo Usuário</h3>
             <form id="usuario-form">
-                <input type="text" name="nome_usuario" id="nome-usuario" placeholder="Nome Completo" required>
+                <input type="text"  name="nome_usuario"  id="nome-usuario"  placeholder="Nome Completo" required>
                 <input type="email" name="email_usuario" id="email-usuario" placeholder="E-mail" required>
-                <input type="text" name="matricula" id="matricula" placeholder="Matrícula (máx 8 dígitos)" maxlength="8" pattern="\d*" title="Apenas números, até 8 dígitos" required>
-                <button type="submit">Cadastrar Usuário</button>
+                <input type="text"  name="matricula"     id="matricula" placeholder="Matrícula" maxlength="8" required>
+                <button type="submit" id="btn-salvar">Cadastrar Usuário</button>
+                <button type="button" id="btn-cancelar" onclick="cancelarEdicao()" style="display:none; background-color:#95a5a6;">Cancelar</button>
             </form>
         </section>
 
@@ -36,28 +36,14 @@
             <h3>Usuários Ativos</h3>
             <table>
                 <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>E-mail</th>
-                        <th>Matrícula</th>
-                        <th>Ações</th>
-                    </tr>
+                    <tr><th>Nome</th><th>E-mail</th><th>Matrícula</th><th>Ações</th></tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>Filipe de Oliveira</td>
-                        <td>filipe@email.com</td>
-                        <td>2025001</td>
-                        <td>
-                            <button>Editar</button>
-                            <button class="btn-delete">Excluir</button>
-                        </td>
-                    </tr>
+                <tbody id="tabela-clientes-body">
+                    <tr><td colspan="4" style="text-align:center">Carregando...</td></tr>
                 </tbody>
             </table>
         </section>
     </main>
-
-    <script src="../static/js/main.js"></script>
+    <script src="clientes.js"></script>
 </body>
 </html>
