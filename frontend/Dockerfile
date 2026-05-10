@@ -1,9 +1,5 @@
-# Usa uma imagem leve do Nginx
 FROM nginx:alpine
-
-# Copia os arquivos do seu frontend para a pasta padrão do Nginx
-COPY ./templates /usr/share/nginx/html
-COPY ./static /usr/share/nginx/html/static
-
-# Expõe a porta 80
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY . /usr/share/nginx/html
 EXPOSE 80
