@@ -1,332 +1,126 @@
-🎓 ROTEIRO — Sistema de Biblioteca (Microsserviços + MVC)
-=========================================================
+# 📚 Sistema Web de Biblioteca  
+### Arquitetura de Microsserviços + MVC + Docker
 
-1️⃣ Introdução do Projeto
-=========================
+---
 
-**Título:** Sistema de Gerenciamento de Biblioteca baseado em Microsserviços
+## 📖 Visão Geral do Projeto
+Esse projeto foi desenvolvido para a disciplina de Desenvolvimento Web 2 por Matheus Tenório e Filipe de Oliveira.
 
-**Objetivo:**
+O **Sistema Web de Biblioteca** é uma aplicação desenvolvida com fins acadêmicos para aplicar conceitos modernos de **Engenharia de Software**, **Arquitetura de Sistemas** e **Desenvolvimento Web**. O sistema foi construído utilizando arquitetura baseada em microsserviços, onde cada domínio funciona de forma independente e se comunica através de **APIs REST**.
 
-Desenvolver um sistema web para controle de:
+O sistema permite o gerenciamento completo de uma biblioteca, incluindo:
 
-*   clientes
-    
-*   livros
-    
-*   empréstimos
-    
+- 👤 Cadastro de clientes  
+- 📘 Gerenciamento de livros  
+- 🔄 Controle de empréstimos e devoluções  
 
-utilizando arquitetura moderna baseada em **Microsserviços** e padrão **MVC**.
+Alem disso, o sistema inclui 3 entidades **(Clientes, Livros, Empréstimos)** sendo possível realizar operações CRUD **(CREATE - READ - UPDATE - DELETE)** em cada uma das entidades.
 
-2️⃣ Tecnologias Utilizadas
-==========================
+Este sistema foi feito para ser executado em sua IDE de preferência ou na Nuvem através do Cloud9 (AWS).
 
-### Backend
+---
 
-*   Python
-    
-*   Flask
-    
-*   API REST
-    
+## ⚙️ Funcionalidades do Sistema
 
-### Frontend
+### 👤 Clientes
+- Cadastrar cliente
+- Listar clientes
+- Editar dados
+- Remover cliente
 
-*   HTML
-    
-*   CSS
-    
-*   JavaScript
-    
+### 📘 Livros
+- Cadastrar livros
+- Consultar acervo
+- Alterar disponibilidade
+- Remover livros
 
-### Banco de Dados
+### 🔄 Empréstimos
+- Registrar empréstimos
+- Associar cliente a livro
+- Registrar devoluções
+- Excluir empréstimos
 
-*   MySQL
-    
+---
 
-### DevOps
+## 🛠 Tecnologias Utilizadas
 
-*   Docker
-    
-*   Docker Compose
-    
+### Backend:
+- Python
+- Flask
+- API REST
+- Arquitetura MVC
 
-### Arquitetura
+### Frontend:
+- HTML5
+- CSS3
+- JavaScript
+- Nginx
 
-*   MVC (Model-View-Controller)
-    
-*   Microsserviços
-    
+### Banco de Dados:
+- MySQL
 
-3️⃣ Arquitetura Geral do Sistema
-================================
+### DevOps & Infraestrutura:
+- Docker
+- Docker Compose
+- Nginx
 
-Estrutura:biblioteca-system/
-----------------------------
+### Arquitetura:
+- Microsserviços
+- MVC
+- Comunicação HTTP entre serviços
 
-│
+---
 
-├── docker-compose.yml
+## 🏗 Arquitetura do Sistema
 
-│
+O sistema foi dividido em múltiplos serviços independentes (sendo os 3 principais: Cliente - Livro - Empréstimo):
 
-├── frontend/
+### 🔹 Frontend
+Interface visual responsável pela interação com o usuário e envio das requisições para as APIs.
 
-│ ├── index.html
+### 🔹 Cliente Service
+Gerencia operações relacionadas aos usuários da biblioteca.
 
-│ ├── css/
+### 🔹 Livro Service
+Responsável pelo controle do acervo e disponibilidade dos livros.
 
-│ └── js/
+### 🔹 Emprestimo Service
+Controla empréstimos e devoluções, integrando clientes e livros.
 
-│
+### 🔹 MySQL Database
+Armazena permanentemente os dados do sistema.
 
-├── cliente-service/
+### 🔹 Nginx
+Funciona como **API Gateway**, centralizando o acesso aos microsserviços.
 
-│ ├── app.py
-
-│ ├── models/
-
-│ ├── controllers/
-
-│ ├── routes/
-
-│ ├── config.py
-
-│ ├── requirements.txt
-
-│ └── Dockerfile
-
-│
-
-├── livro-service/
-
-│ └── (mesma estrutura)
-
-│
-
-├── emprestimo-service/
-
-│ └── (mesma estrutura)
-
-│
-
-└── database/
-
-└── init.sql
-
-4️⃣ Organização do Projeto
-==========================
-
-📁 frontend/
-------------
-
-Responsável pela interface do usuário.
-
-Funções:
-
-*   telas HTML
-    
-*   requisições HTTP
-    
-*   interação com APIs
-    
-
-📁 cliente-service/
--------------------
-
-Microsserviço responsável por:
-
-*   cadastrar cliente
-    
-*   listar clientes
-    
-*   editar cliente
-    
-*   remover cliente
-    
-
-📁 livro-service/
------------------
-
-Responsável por:
-
-*   cadastro de livros
-    
-*   controle de disponibilidade
-    
-*   consulta de acervo
-    
-
-📁 emprestimo-service/
-----------------------
-
-Responsável por:
-
-*   registrar empréstimos
-    
-*   vincular cliente + livro
-    
-*   controlar devoluções
-    
-
-📁 database/
-------------
-
-Contém:
-
-*   criação das tabelas
-    
-*   relacionamento entre entidades
-    
-
-docker-compose.yml
-------------------
-
-Responsável por:
-
-*   subir todos os serviços
-    
-*   conectar containers
-    
-*   iniciar banco automaticamente
-    
-
-5️⃣ Arquitetura MVC
-===================
-
-🔵 Model
---------
-
-Camada responsável por:
-
-*   conexão com MySQL
-    
-*   consultas SQL
-    
-*   manipulação de dados
-    
-
-🟢 Controller
--------------
-
-Responsável por:
-
-*   regras de negócio
-    
-*   validações
-    
-*   comunicação Model ↔ Rotas
-    
-
-🟠 View
--------
-
-Representada pelo:
-
-*   Frontend HTML
-    
-*   respostas JSON da API
-    
-
-6️⃣ Funcionamento dos Microsserviços
-====================================
-
-Cada serviço:
-
-✅ possui aplicação Flask própria✅ roda em container separado✅ possui MVC interno✅ expõe API REST independente
-
-exemplo:
-
-localhost:5001 → clientes
-
-localhost:5002 → livros
-
-localhost:5003 → empréstim
-
-7️⃣ Fluxo do Sistema
-====================
-
-### Cadastro de Cliente
-
-1.  Usuário acessa Frontend
-    
-2.  Frontend envia requisição HTTP
-    
-3.  cliente-service recebe
-    
-4.  Controller processa
-    
-5.  Model salva no MySQL
-    
-
-### Empréstimo de Livro
-
-1.  Usuário seleciona cliente
-    
-2.  Escolhe livro
-    
-3.  emprestimo-service registra empréstimo
-    
-4.  livro-service marca livro como indisponível
-    
-
-8️⃣ Containerização com Docker
-==============================
-
-Docker permite:
-
-✅ padronização do ambiente✅ execução em qualquer máquina✅ isolamento dos serviços
 
 Cada microsserviço possui:
 
-*   Dockerfile próprio
-    
-*   container independente
-    
+- Aplicação Flask independente  
+- Estrutura MVC própria  
+- Dockerfile individual  
+- Dependências isoladas  
 
-9️⃣ Comunicação entre Serviços
-==============================
+---
 
-Comunicação realizada via:
+## 🚀 Processo de Desenvolvimento
 
---> APIs REST --> requisições HTTP
+O projeto foi desenvolvido seguindo etapas progressivas:
 
-Exemplo: emprestimo-service → livro-service (para atualizar disponibilidade do livro.)
+1. Modelagem do domínio da biblioteca  
+2. Definição das entidades principais  
+3. Criação do banco MySQL  
+4. Desenvolvimento do primeiro microsserviço  
+5. Implementação do padrão MVC  
+6. Replicação da arquitetura para os demais serviços  
+7. Implementação das APIs REST  
+8. Desenvolvimento do frontend  
+9. Integração frontend ↔ backend  
+10. Containerização com Docker  
+11. Ultilização do Docker Compose para dependências  
+12. Configuração de rede entre containers  
+13. Implementação do Nginx como gateway  
+14. Testes de comunicação entre serviços  
+15. Deploy em ambiente Cloud9/AWS  
 
-🔟 Benefícios da Arquitetura
-============================
-
-✔ baixo acoplamento✔ fácil manutenção✔ escalabilidade✔ serviços independentes✔ padrão usado na indústria
-
-1️⃣1️⃣ Demonstração do Sistema
-==============================
-
-Mostrar:
-
-*   cadastro de cliente
-    
-*   cadastro de livro
-    
-*   realização de empréstimo
-    
-*   consulta dos dados
-    
-
-1️⃣2️⃣ Conclusão
-================
-
-O projeto demonstrou a aplicação prática de:
-
-*   arquitetura MVC
-    
-*   microsserviços
-    
-*   APIs REST
-    
-*   containerização com Docker
-    
-
-permitindo desenvolver um sistema modular e escalável.
-
-> O sistema foi projetado seguindo princípios modernos de engenharia de software, separando responsabilidades por domínio e utilizando microsserviços containerizados para facilitar escalabilidade e manutenção.
+---
