@@ -1,6 +1,6 @@
-const API_EMP = 'http://localhost:5003/emprestimos';
-const API_CLI = 'http://localhost:5001/clientes';
-const API_LIV = 'http://localhost:5002/livros';
+const API_EMP = "/api/emprestimos";
+const API_CLI = "/api/clientes";
+const API_LIV = "/api/livros";
 
 // ── Carregar tabela de empréstimos ─────────────────────────────────────────
 

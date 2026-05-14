@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5001/clientes';
+const API_URL = "/api/clientes";
 let editandoId = null;
 
 // ── Carregar e renderizar tabela ───────────────────────────────────────────
