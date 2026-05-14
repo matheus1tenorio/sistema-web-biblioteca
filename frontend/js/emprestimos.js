@@ -84,6 +84,7 @@ document.getElementById('emprestimo-form').addEventListener('submit', async (e) 
             return;
         }
         e.target.reset();
+        // Atualiza tabela e dropdowns sem recarregar a página
         await Promise.all([carregarEmprestimos(), carregarDropdowns()]);
     } catch (err) {
         alert('Erro ao conectar com o serviço de empréstimos.');
