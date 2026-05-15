@@ -124,3 +124,51 @@ O projeto foi desenvolvido seguindo etapas progressivas:
 15. Deploy em ambiente Cloud9/AWS  
 
 ---
+
+# ▶️ Como Executar o Sistema
+
+Este guia explica **passo a passo** como rodar o sistema completo da Biblioteca utilizando **Docker**, funcionando em qualquer computador sem necessidade de instalar dependências manualmente.
+
+---
+
+##  Pré-requisitos:
+
+Antes de iniciar, é necessário possuir instalado em sua máquina ou ambiente:
+
+✅ Docker  
+✅ Docker Compose  
+✅ Git (opcional, para clonar o projeto)
+
+---
+
+## Executando:
+
+**Clonar o Repositório**
+```
+git clone https://github.com/matheus1tenorio/sistema-web-biblioteca.git
+```
+
+**Acessar a Pasta Certa**
+```
+cd sistema-web-biblioteca
+```
+
+**Subir o Sistema**
+```
+docker compose up --build
+```
+
+**Fechar o Sistema**
+```
+docker compose down
+```
+
+**Verificar Containers (Opcional)**
+```
+docker ps
+```
+
+**Acessar o Sistema**
+```
+http://localhost:8080/index.html
+```
