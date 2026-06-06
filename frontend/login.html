@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Biblioteca</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Vídeo de fundo -->
+    <video class="video-bg" autoplay muted loop playsinline>
+        <source src="videos/biblioteca1.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+
+    <div class="login-container">
+        <div class="login-box">
+            <h1>📚 BiblioTech</h1>
+            <p>Faça login para continuar</p>
+            
+            <form id="login-form">
+                <input type="email" id="email" placeholder="E-mail" required>
+                <input type="password" id="senha" placeholder="Senha" required>
+                <button type="submit">Entrar</button>
+            </form>
+
+            <div class="links">
+                <a href="esqueci-senha.html">Esqueci minha senha</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // Verificar se já está logado
+        if (isAuthenticated()) {
+            window.location.href = 'livros.html';
+        }
+    
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+        
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+            
+            const result = await fazerLogin(email, senha);
+        
+            if (result.success) {
+            alert(`Login realizado como ${result.user.role.toUpperCase()}`);
+            window.location.href = 'livros.html';
+            } else {
+            alert(`${result.error}`);
+            }
+        });
+    </script>
+</body>
+</html>

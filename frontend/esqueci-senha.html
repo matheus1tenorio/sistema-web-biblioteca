@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esqueci a Senha - BiblioTech</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+    <div class="cadastro-container">
+        <div class="cadastro-box">
+            <h1>Recuperar Senha</h1>
+            <p>Informe seu e-mail para receber o link de recuperação</p>
+            
+            <form id="forgot-form">
+                <input type="email" id="email" placeholder="Seu e-mail" required>
+                <button type="submit">Enviar Link de Recuperação</button>
+            </form>
+
+            <div class="links">
+                <p>Lembrou a senha? 
+                    <a href="login.html" class="login-link">Voltar ao Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('forgot-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+
+            if (email) {
+                alert(`Um link de recuperação foi enviado para: ${email}\n\n(Em ambiente real, o e-mail seria enviado aqui)`);
+                // Simulação: redireciona de volta para login após 1,5s
+                setTimeout(() => {
+                    window.location.href = "login.html";
+                }, 1500);
+            }
+        });
+    </script>
+</body>
+</html>
