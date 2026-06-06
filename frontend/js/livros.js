@@ -5,10 +5,15 @@ let editandoId = null;
 
 async function carregarLivros() {
     try {
-        const res = await fetch(API_URL);
-        const livros = await res.json();
-        const tbody = document.getElementById('tabela-livros-body');
+        const response = await authenticatedFetch(API_URL);
+        if (!response.ok) throw new Error('Erro ao carregar');
+        const livros = await response.json();
         tbody.innerHTML = '';
+        
+        // No topo, depois das constantes
+        if (!isAuthenticated() && window.location.pathname !== '/login.html') {
+            window.location.href = 'login.html';
+        }
 
         if (!livros.length) {
             tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">Nenhum livro cadastrado.</td></tr>';
@@ -30,7 +35,7 @@ async function carregarLivros() {
         });
     } catch (err) {
         console.error('Erro ao carregar livros:', err);
-        document.getElementById('tabela-livros-body').innerHTML =
+        document.getElementById('tabela-livros-body').innerHTML = //<-- Essa linha e a de baixo ficam?
             '<tr><td colspan="5" style="color:red;text-align:center">Erro ao conectar com o serviço de livros.</td></tr>';
     }
 }
@@ -49,13 +54,13 @@ document.getElementById('livro-form').addEventListener('submit', async (e) => {
     const metodo = editandoId ? 'PUT' : 'POST';
 
     try {
-        const res = await fetch(url, {
+        const response = await authenticatedFetch(url, {
             method: metodo,
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json' }, //<-- Essa linha fica?
             body: JSON.stringify(dados)
         });
         const data = await res.json();
-        if (!res.ok) { alert(data.erro || 'Erro ao salvar livro.'); return; }
+        if (!response.ok) { alert(data.erro || 'Erro ao salvar livro.'); return; }
         cancelarEdicao();
         carregarLivros();
     } catch (err) {
@@ -92,9 +97,9 @@ function cancelarEdicao() {
 async function deletarLivro(id) {
     if (!confirm('Tem certeza que deseja excluir este livro?')) return;
     try {
-        const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        const response = await authenticatedFetch(`${API_URL}/${id}`, { method: 'DELETE' });
         const data = await res.json();
-        if (!res.ok) { alert(data.erro || 'Erro ao excluir livro.'); return; }
+        if (!response.ok) { alert(data.erro || 'Erro ao excluir livro.'); return; }
         carregarLivros();
     } catch (err) {
         alert('Erro ao conectar com o serviço de livros.');

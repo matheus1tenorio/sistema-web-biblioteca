@@ -5,10 +5,15 @@ let editandoId = null;
 
 async function carregarClientes() {
     try {
-        const res = await fetch(API_URL);
+        const res = await authenticatedFetch(API_URL);
         const clientes = await res.json();
         const tbody = document.getElementById('tabela-clientes-body');
         tbody.innerHTML = '';
+        
+        // Verificar autenticação
+        if (!isAuthenticated() && window.location.pathname !== '/login.html') {
+            window.location.href = 'login.html';
+        }
 
         if (!clientes.length) {
             tbody.innerHTML = '<tr><td colspan="4" style="text-align:center">Nenhum usuário cadastrado.</td></tr>';
@@ -49,11 +54,7 @@ async function salvarCliente(e) {
     const metodo = editandoId ? 'PUT' : 'POST';
 
     try {
-        const res = await fetch(url, {
-            method: metodo,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dados)
-        });
+        const res = await authenticatedFetch(url, { method: metodo, body: JSON.stringify(dados)});
         const data = await res.json();
         if (!res.ok) { alert(data.erro || 'Erro ao salvar usuário.'); return; }
         cancelarEdicao();
@@ -92,7 +93,7 @@ function cancelarEdicao() {
 async function deletarCliente(id) {
     if (!confirm('Tem certeza que deseja excluir este usuário?')) return;
     try {
-        const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        const res = await authenticatedFetch(`${API_URL}/${id}`, { method: 'DELETE' });
         const data = await res.json();
         if (!res.ok) { alert(data.erro || 'Erro ao excluir usuário.'); return; }
         carregarClientes();

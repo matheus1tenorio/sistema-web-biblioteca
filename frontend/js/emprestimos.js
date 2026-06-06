@@ -6,10 +6,15 @@ const API_LIV = "/api/livros";
 
 async function carregarEmprestimos() {
     try {
-        const res = await fetch(API_EMP);
+        const res = await authenticatedFetch(API_EMP);
         const emprestimos = await res.json();
         const tbody = document.getElementById('tabela-emprestimos-body');
         tbody.innerHTML = '';
+        
+        // Verificar autenticação
+        if (!isAuthenticated() && window.location.pathname !== '/login.html') {
+            window.location.href = 'login.html';
+        }
 
         if (!emprestimos.length) {
             tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">Nenhum empréstimo registrado.</td></tr>';
@@ -44,7 +49,7 @@ async function carregarEmprestimos() {
 
 async function carregarDropdowns() {
     try {
-        const [resU, resL] = await Promise.all([fetch(API_CLI), fetch(API_LIV)]);
+        const [resU, resL] = await Promise.all([authenticatedfetch(API_CLI), authenticatedfetch(API_LIV)]);
         const usuarios = await resU.json();
         const livros   = await resL.json();
 
@@ -73,7 +78,7 @@ document.getElementById('emprestimo-form').addEventListener('submit', async (e) 
     };
 
     try {
-        const res = await fetch(API_EMP, {
+        const res = await authenticatedfetch(API_EMP, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dados)
@@ -97,7 +102,7 @@ async function devolverLivro(id) {
     if (!confirm('Confirmar devolução deste livro?')) return;
     const hoje = new Date().toISOString().split('T')[0];
     try {
-        const res = await fetch(`${API_EMP}/${id}/devolver`, {
+        const res = await authenticatedfetch(`${API_EMP}/${id}/devolver`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ data_devolucao: hoje })
@@ -115,7 +120,7 @@ async function devolverLivro(id) {
 async function excluirEmprestimo(id) {
     if (!confirm('Excluir este empréstimo?')) return;
     try {
-        const res = await fetch(`${API_EMP}/${id}`, { method: 'DELETE' });
+        const res = await authenticatedfetch(`${API_EMP}/${id}`, { method: 'DELETE' });
         const data = await res.json();
         if (!res.ok) { alert(data.erro || 'Erro ao excluir.'); return; }
         await Promise.all([carregarEmprestimos(), carregarDropdowns()]);
