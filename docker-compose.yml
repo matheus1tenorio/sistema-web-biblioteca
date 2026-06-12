@@ -35,6 +35,7 @@ services:
       DB_USER: root
       DB_PASSWORD: root
       DB_NAME: biblioteca
+      JWT_SECRET_KEY: biblioteca_secret_key
     networks:
       - biblioteca-network
 
