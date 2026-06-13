@@ -4,6 +4,8 @@ from models.livro_model import (
     create_livro,
     update_livro,
     update_disponibilidade,
+    reduzir_estoque,
+    aumentar_estoque,
     delete_livro
 )
 
@@ -19,16 +21,32 @@ def buscar_livro(livro_id):
 def criar_livro(data):
     if "titulo" not in data or "autor" not in data:
         return {"erro": "titulo e autor são obrigatórios"}, 400
-    create_livro(data["titulo"], data["autor"], data.get("ano"))
+
+    create_livro(
+        data["titulo"],
+        data["autor"],
+        data.get("ano"),
+        data.get("quantidade", 1)
+    )
+
     return {"mensagem": "Livro criado com sucesso"}, 201
 
 
 def editar_livro(livro_id, data):
     if not get_livro_by_id(livro_id):
         return {"erro": "Livro não encontrado"}, 404
+
     if "titulo" not in data or "autor" not in data:
         return {"erro": "titulo e autor são obrigatórios"}, 400
-    update_livro(livro_id, data["titulo"], data["autor"], data.get("ano"))
+
+    update_livro(
+        livro_id,
+        data["titulo"],
+        data["autor"],
+        data.get("ano"),
+        data.get("quantidade", 1)
+    )
+
     return {"mensagem": "Livro atualizado com sucesso"}, 200
 
 
@@ -37,8 +55,33 @@ def alterar_status(livro_id, disponivel):
     return True
 
 
+def diminuir_estoque_livro(livro_id):
+    livro = get_livro_by_id(livro_id)
+
+    if not livro:
+        return {"erro": "Livro não encontrado"}, 404
+
+    if not reduzir_estoque(livro_id):
+        return {"erro": "Livro sem exemplares disponíveis"}, 400
+
+    return {"mensagem": "Estoque reduzido com sucesso"}, 200
+
+
+def aumentar_estoque_livro(livro_id):
+    livro = get_livro_by_id(livro_id)
+
+    if not livro:
+        return {"erro": "Livro não encontrado"}, 404
+
+    aumentar_estoque(livro_id)
+
+    return {"mensagem": "Estoque aumentado com sucesso"}, 200
+
+
 def remover_livro(livro_id):
     if not get_livro_by_id(livro_id):
         return {"erro": "Livro não encontrado"}, 404
+
     delete_livro(livro_id)
+
     return {"mensagem": "Livro removido com sucesso"}, 200

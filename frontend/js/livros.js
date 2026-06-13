@@ -1,22 +1,29 @@
 const API_URL = "/api/livros";
 let editandoId = null;
 
-// ── Carregar e renderizar tabela ───────────────────────────────────────────
+// Carregar e renderizar tabela 
 
 async function carregarLivros() {
+    const tbody = document.getElementById("tabela-livros-body");
+
     try {
         const response = await authenticatedFetch(API_URL);
-        if (!response.ok) throw new Error('Erro ao carregar');
+
+        if (!response.ok) {
+            throw new Error("Erro ao carregar livros");
+        }
+
         const livros = await response.json();
-        tbody.innerHTML = '';
-        
-        // No topo, depois das constantes
-        if (!isAuthenticated() && window.location.pathname !== '/login.html') {
-            window.location.href = 'login.html';
+
+        tbody.innerHTML = "";
+
+        if (!isAuthenticated() && window.location.pathname !== "/login.html") {
+            window.location.href = "login.html";
         }
 
         if (!livros.length) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">Nenhum livro cadastrado.</td></tr>';
+            tbody.innerHTML =
+                '<tr><td colspan="6" style="text-align:center">Nenhum livro cadastrado.</td></tr>';
             return;
         }
 
@@ -25,93 +32,167 @@ async function carregarLivros() {
                 <tr>
                     <td>${l.titulo}</td>
                     <td>${l.autor}</td>
-                    <td>${l.ano || '-'}</td>
-                    <td>${l.disponivel ? '✅ Sim' : '❌ Não'}</td>
+                    <td>${l.ano || "-"}</td>
+                    <td>${l.quantidade}</td>
+                    <td>${l.disponivel ? "✅ Disponível" : "❌ Indisponível"}</td>
                     <td>
-                        <button onclick="prepararEdicao(${l.id}, '${esc(l.titulo)}', '${esc(l.autor)}', ${l.ano || 'null'})">Editar</button>
-                        <button onclick="deletarLivro(${l.id})" style="background:#e74c3c">Excluir</button>
+                        <button onclick="prepararEdicao(
+                            ${l.id},
+                            '${esc(l.titulo)}',
+                            '${esc(l.autor)}',
+                            ${l.ano || "null"},
+                            ${l.quantidade}
+                        )">
+                            Editar
+                        </button>
+
+                        <button
+                            onclick="deletarLivro(${l.id})"
+                            style="background:#e74c3c"
+                        >
+                            Excluir
+                        </button>
                     </td>
-                </tr>`;
+                </tr>
+            `;
         });
+
     } catch (err) {
-        console.error('Erro ao carregar livros:', err);
-        document.getElementById('tabela-livros-body').innerHTML = //<-- Essa linha e a de baixo ficam?
-            '<tr><td colspan="5" style="color:red;text-align:center">Erro ao conectar com o serviço de livros.</td></tr>';
+        console.error("Erro ao carregar livros:", err);
+
+        tbody.innerHTML =
+            '<tr><td colspan="6" style="color:red;text-align:center">Erro ao conectar com o serviço de livros.</td></tr>';
     }
 }
 
-// ── Salvar (criar ou atualizar) ────────────────────────────────────────────
+// Salvar (criar ou atualizar) 
 
-document.getElementById('livro-form').addEventListener('submit', async (e) => {
+document.getElementById("livro-form").addEventListener("submit", async (e) => {
     e.preventDefault();
+
     const dados = {
         titulo: e.target.titulo.value.trim(),
-        autor:  e.target.autor.value.trim(),
-        ano:    e.target.ano.value ? parseInt(e.target.ano.value) : null
+        autor: e.target.autor.value.trim(),
+        ano: e.target.ano.value
+            ? parseInt(e.target.ano.value)
+            : null,
+        quantidade: e.target.quantidade.value
+            ? parseInt(e.target.quantidade.value)
+            : 0
     };
 
-    const url    = editandoId ? `${API_URL}/${editandoId}` : API_URL;
-    const metodo = editandoId ? 'PUT' : 'POST';
+    const url = editandoId
+        ? `${API_URL}/${editandoId}`
+        : API_URL;
+
+    const metodo = editandoId
+        ? "PUT"
+        : "POST";
 
     try {
         const response = await authenticatedFetch(url, {
             method: metodo,
-            headers: { 'Content-Type': 'application/json' }, //<-- Essa linha fica?
+            headers: {
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(dados)
         });
-        const data = await res.json();
-        if (!response.ok) { alert(data.erro || 'Erro ao salvar livro.'); return; }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.erro || "Erro ao salvar livro.");
+            return;
+        }
+
         cancelarEdicao();
         carregarLivros();
+
     } catch (err) {
-        alert('Erro ao conectar com o serviço de livros.');
+        alert("Erro ao conectar com o serviço de livros.");
     }
 });
 
-// ── Preparar edição ────────────────────────────────────────────────────────
+// Preparar edição
 
-function prepararEdicao(id, titulo, autor, ano) {
+function prepararEdicao(id, titulo, autor, ano, quantidade) {
     editandoId = id;
-    const form = document.getElementById('livro-form');
+
+    const form = document.getElementById("livro-form");
+
     form.titulo.value = titulo;
-    form.autor.value  = autor;
-    form.ano.value    = ano !== null ? ano : '';
+    form.autor.value = autor;
+    form.ano.value = ano !== null ? ano : "";
+    form.quantidade.value = quantidade;
 
-    document.getElementById('form-titulo').innerText       = 'Editar Livro';
-    document.getElementById('btn-salvar').innerText        = 'Atualizar Livro';
-    document.getElementById('btn-cancelar').style.display = 'inline-block';
+    document.getElementById("form-titulo").innerText =
+        "Editar Livro";
 
-    form.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById("btn-salvar").innerText =
+        "Atualizar Livro";
+
+    document.getElementById("btn-cancelar").style.display =
+        "inline-block";
+
+    form.scrollIntoView({
+        behavior: "smooth"
+    });
 }
 
 function cancelarEdicao() {
     editandoId = null;
-    document.getElementById('livro-form').reset();
-    document.getElementById('form-titulo').innerText       = 'Cadastrar Novo Livro';
-    document.getElementById('btn-salvar').innerText        = 'Salvar Livro';
-    document.getElementById('btn-cancelar').style.display = 'none';
+
+    document.getElementById("livro-form").reset();
+
+    document.getElementById("quantidade").value = 1;
+
+    document.getElementById("form-titulo").innerText =
+        "Cadastrar Novo Livro";
+
+    document.getElementById("btn-salvar").innerText =
+        "Salvar Livro";
+
+    document.getElementById("btn-cancelar").style.display =
+        "none";
 }
 
-// ── Excluir ────────────────────────────────────────────────────────────────
+// Excluir
 
 async function deletarLivro(id) {
-    if (!confirm('Tem certeza que deseja excluir este livro?')) return;
+    if (!confirm("Tem certeza que deseja excluir este livro?")) {
+        return;
+    }
+
     try {
-        const response = await authenticatedFetch(`${API_URL}/${id}`, { method: 'DELETE' });
-        const data = await res.json();
-        if (!response.ok) { alert(data.erro || 'Erro ao excluir livro.'); return; }
+        const response = await authenticatedFetch(
+            `${API_URL}/${id}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.erro || "Erro ao excluir livro.");
+            return;
+        }
+
         carregarLivros();
+
     } catch (err) {
-        alert('Erro ao conectar com o serviço de livros.');
+        alert("Erro ao conectar com o serviço de livros.");
     }
 }
 
-// ── Utilitário ─────────────────────────────────────────────────────────────
+// Utilitário
 
 function esc(str) {
-    return String(str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    return String(str || "")
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'");
 }
 
-// ── Init ───────────────────────────────────────────────────────────────────
+// Init
 
 carregarLivros();

@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS livro (
     titulo VARCHAR(200) NOT NULL,
     autor VARCHAR(100) NOT NULL,
     ano INT,
+    quantidade INT NOT NULL DEFAULT 1,
     disponivel BOOLEAN DEFAULT TRUE
 );
 
