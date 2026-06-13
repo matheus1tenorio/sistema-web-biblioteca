@@ -1,4 +1,6 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
+import requests
 
 from controllers.livro_controller import (
     listar_livros,
@@ -13,13 +15,43 @@ from controllers.livro_controller import (
 
 livro_bp = Blueprint("livro_bp", __name__)
 
+CLIENTE_SERVICE_URL = "http://cliente-service:5000"
+
+
+def buscar_cliente(user_id):
+    try:
+        resp = requests.get(
+            f"{CLIENTE_SERVICE_URL}/clientes/{user_id}",
+            timeout=5
+        )
+
+        if resp.status_code == 200:
+            return resp.json()
+
+        return None
+
+    except requests.exceptions.RequestException:
+        return None
+
+
+def verificar_admin():
+    user_id = get_jwt_identity()
+    usuario = buscar_cliente(user_id)
+
+    if not usuario or usuario.get("role") != "admin":
+        return False
+
+    return True
+
 
 @livro_bp.route("/livros", methods=["GET"])
+@jwt_required()
 def listar():
     return jsonify(listar_livros()), 200
 
 
 @livro_bp.route("/livros/<int:id>", methods=["GET"])
+@jwt_required()
 def buscar(id):
     livro = buscar_livro(id)
 
@@ -30,25 +62,35 @@ def buscar(id):
 
 
 @livro_bp.route("/livros", methods=["POST"])
+@jwt_required()
 def criar():
-    data = request.json
+    if not verificar_admin():
+        return jsonify({"erro": "Apenas administradores podem cadastrar livros"}), 403
 
+    data = request.json
     resultado = criar_livro(data)
 
     return jsonify(resultado[0]), resultado[1]
 
 
 @livro_bp.route("/livros/<int:id>", methods=["PUT"])
+@jwt_required()
 def editar(id):
-    data = request.json
+    if not verificar_admin():
+        return jsonify({"erro": "Apenas administradores podem editar livros"}), 403
 
+    data = request.json
     resultado = editar_livro(id, data)
 
     return jsonify(resultado[0]), resultado[1]
 
 
 @livro_bp.route("/livros/<int:id>/status", methods=["PUT"])
+@jwt_required()
 def status(id):
+    if not verificar_admin():
+        return jsonify({"erro": "Apenas administradores podem alterar status"}), 403
+
     data = request.json
 
     if "disponivel" not in data:
@@ -60,21 +102,24 @@ def status(id):
 
 
 @livro_bp.route("/livros/<int:id>/reduzir", methods=["PUT"])
-def reduzir_estoque(id):
+@jwt_required()
+def reduzir(id):
     resultado = diminuir_estoque_livro(id)
-
     return jsonify(resultado[0]), resultado[1]
 
 
 @livro_bp.route("/livros/<int:id>/aumentar", methods=["PUT"])
-def aumentar_estoque(id):
+@jwt_required()
+def aumentar(id):
     resultado = aumentar_estoque_livro(id)
-
     return jsonify(resultado[0]), resultado[1]
 
 
 @livro_bp.route("/livros/<int:id>", methods=["DELETE"])
+@jwt_required()
 def excluir(id):
-    resultado = remover_livro(id)
+    if not verificar_admin():
+        return jsonify({"erro": "Apenas administradores podem remover livros"}), 403
 
+    resultado = remover_livro(id)
     return jsonify(resultado[0]), resultado[1]

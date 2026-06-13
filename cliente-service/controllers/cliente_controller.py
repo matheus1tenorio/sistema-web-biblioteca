@@ -79,13 +79,15 @@ def login_cliente(dados):
 
     token = gerar_token(cliente["id"])
 
+    role = cliente.get("role", "cliente")
+
     return {
         "access_token": token,
         "user": {
             "id": cliente["id"],
             "nome": cliente["nome"],
             "email": cliente["email"],
-            "role": "cliente"
+            "role": role
         }
     }, 200
 

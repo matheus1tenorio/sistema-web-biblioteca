@@ -6,11 +6,9 @@ def get_all_clientes():
     cursor = conn.cursor(dictionary=True)
 
     cursor.execute("SELECT * FROM cliente")
-
     result = cursor.fetchall()
 
     conn.close()
-
     return result
 
 
@@ -26,7 +24,6 @@ def get_cliente_by_id(cliente_id):
     result = cursor.fetchone()
 
     conn.close()
-
     return result
 
 
@@ -42,25 +39,23 @@ def get_cliente_by_email(email):
     result = cursor.fetchone()
 
     conn.close()
-
     return result
 
 
-def create_cliente(nome, email, senha, matricula=None):
+def create_cliente(nome, email, senha, matricula=None, role="cliente"):
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute(
         """
         INSERT INTO cliente
-        (nome, email, matricula, senha)
-        VALUES (%s, %s, %s, %s)
+        (nome, email, matricula, senha, role)
+        VALUES (%s, %s, %s, %s, %s)
         """,
-        (nome, email, matricula, senha)
+        (nome, email, matricula, senha, role)
     )
 
     conn.commit()
-
     conn.close()
 
 
@@ -80,7 +75,6 @@ def update_cliente(cliente_id, nome, email, matricula=None):
     )
 
     conn.commit()
-
     conn.close()
 
 
@@ -101,7 +95,6 @@ def possui_emprestimos_ativos(cliente_id):
     resultado = cursor.fetchone()
 
     conn.close()
-
     return resultado["total"] > 0
 
 
@@ -115,5 +108,4 @@ def delete_cliente(cliente_id):
     )
 
     conn.commit()
-
     conn.close()
