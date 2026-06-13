@@ -7,7 +7,9 @@ from models.emprestimo_model import (
     get_emprestimo_by_id,
     create_emprestimo,
     finalizar_emprestimo,
-    delete_emprestimo
+    delete_emprestimo,
+    contar_emprestimos_ativos,
+    possui_livro_emprestado
 )
 
 LIVRO_SERVICE_URL = os.getenv(
@@ -31,6 +33,18 @@ def criar_emprestimo(data):
 
     if not cliente_id or not livro_id:
         return {"erro": "cliente_id e livro_id são obrigatórios"}, 400
+
+    # REGRA 1: Máximo de 3 empréstimos ativos
+    if contar_emprestimos_ativos(cliente_id) >= 3:
+        return {
+            "erro": "O usuário já possui 3 empréstimos ativos"
+        }, 400
+
+    # REGRA 2: Não pode pegar o mesmo livro duas vezes
+    if possui_livro_emprestado(cliente_id, livro_id):
+        return {
+            "erro": "O usuário já possui este livro emprestado"
+        }, 400
 
     data_emprestimo = datetime.now().date().isoformat()
 
@@ -91,6 +105,7 @@ def devolver_livro(emprestimo_id, data):
     if not emprestimo:
         return {"erro": "Empréstimo não encontrado"}, 404
 
+    # REGRA 3: Só pode finalizar se ainda não foi devolvido
     if emprestimo.get("data_devolucao"):
         return {"erro": "Este livro já foi devolvido"}, 400
 
