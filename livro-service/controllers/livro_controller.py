@@ -23,10 +23,19 @@ def criar_livro(data):
     if "titulo" not in data or "autor" not in data:
         return {"erro": "titulo e autor são obrigatórios"}, 400
 
+    ano = data.get("ano")
+
+    if ano is not None:
+        if not isinstance(ano, int):
+            return {"erro": "Ano deve ser numérico"}, 400
+
+        if ano < 1000 or ano > 9999:
+            return {"erro": "Ano deve possuir exatamente 4 dígitos válidos"}, 400
+
     create_livro(
         data["titulo"],
         data["autor"],
-        data.get("ano"),
+        ano,
         data.get("quantidade", 1)
     )
 
@@ -40,11 +49,20 @@ def editar_livro(livro_id, data):
     if "titulo" not in data or "autor" not in data:
         return {"erro": "titulo e autor são obrigatórios"}, 400
 
+    ano = data.get("ano")
+
+    if ano is not None:
+        if not isinstance(ano, int):
+            return {"erro": "Ano deve ser numérico"}, 400
+
+        if ano < 1000 or ano > 9999:
+            return {"erro": "Ano deve possuir exatamente 4 dígitos válidos"}, 400
+
     update_livro(
         livro_id,
         data["titulo"],
         data["autor"],
-        data.get("ano"),
+        ano,
         data.get("quantidade", 1)
     )
 
