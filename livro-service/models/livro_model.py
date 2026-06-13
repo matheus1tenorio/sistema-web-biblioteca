@@ -20,7 +20,11 @@ def get_livro_by_id(livro_id):
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM livro WHERE id = %s", (livro_id,))
+    cursor.execute(
+        "SELECT * FROM livro WHERE id = %s",
+        (livro_id,)
+    )
+
     livro = cursor.fetchone()
 
     conn.close()
@@ -151,6 +155,27 @@ def aumentar_estoque(livro_id):
     conn.close()
 
     return True
+
+
+def possui_emprestimos_ativos(livro_id):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute(
+        """
+        SELECT COUNT(*) AS total
+        FROM emprestimo
+        WHERE livro_id = %s
+        AND data_devolucao IS NULL
+        """,
+        (livro_id,)
+    )
+
+    resultado = cursor.fetchone()
+
+    conn.close()
+
+    return resultado["total"] > 0
 
 
 def delete_livro(livro_id):

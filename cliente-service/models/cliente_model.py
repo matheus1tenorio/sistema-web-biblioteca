@@ -84,6 +84,27 @@ def update_cliente(cliente_id, nome, email, matricula=None):
     conn.close()
 
 
+def possui_emprestimos_ativos(cliente_id):
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute(
+        """
+        SELECT COUNT(*) AS total
+        FROM emprestimo
+        WHERE cliente_id = %s
+        AND data_devolucao IS NULL
+        """,
+        (cliente_id,)
+    )
+
+    resultado = cursor.fetchone()
+
+    conn.close()
+
+    return resultado["total"] > 0
+
+
 def delete_cliente(cliente_id):
     conn = get_connection()
     cursor = conn.cursor()

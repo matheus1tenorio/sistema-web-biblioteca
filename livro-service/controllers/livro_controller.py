@@ -6,6 +6,7 @@ from models.livro_model import (
     update_disponibilidade,
     reduzir_estoque,
     aumentar_estoque,
+    possui_emprestimos_ativos,
     delete_livro
 )
 
@@ -81,6 +82,11 @@ def aumentar_estoque_livro(livro_id):
 def remover_livro(livro_id):
     if not get_livro_by_id(livro_id):
         return {"erro": "Livro não encontrado"}, 404
+
+    if possui_emprestimos_ativos(livro_id):
+        return {
+            "erro": "Não é permitido excluir livro com empréstimos ativos"
+        }, 400
 
     delete_livro(livro_id)
 

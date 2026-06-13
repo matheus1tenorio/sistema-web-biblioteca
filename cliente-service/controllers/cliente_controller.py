@@ -4,6 +4,7 @@ from models.cliente_model import (
     get_cliente_by_email,
     create_cliente,
     update_cliente,
+    possui_emprestimos_ativos,
     delete_cliente
 )
 
@@ -121,6 +122,11 @@ def remover_cliente(cliente_id):
         return {
             "erro": "Cliente não encontrado"
         }, 404
+
+    if possui_emprestimos_ativos(cliente_id):
+        return {
+            "erro": "Não é permitido excluir usuário com empréstimos ativos"
+        }, 400
 
     delete_cliente(cliente_id)
 
