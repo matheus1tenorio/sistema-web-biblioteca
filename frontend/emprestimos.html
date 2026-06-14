@@ -1,16 +1,19 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Empréstimos - BiblioTech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/style.css">
     <script src="js/auth.js"></script>
 </head>
 <body>
     <header>
         <nav class="navbar">
-            <div class="logo">📚 BiblioTech</div>
+            <div class="logo">BiblioTech</div>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="livros.html">Livros</a></li>
@@ -22,23 +25,25 @@
     </header>
     <main>
         <h2>Controle de Empréstimos</h2>
+        <p>Registre saídas de livros, acompanhe devoluções e mantenha o histórico organizado.</p>
+
         <section id="form-container">
             <h3>Registrar Saída de Livro</h3>
             <form id="emprestimo-form" class="form-row">
                 <div class="form-group">
-                    <label for="select-usuario">Usuário:</label>
+                    <label for="select-usuario">Usuário</label>
                     <select name="usuario_id" id="select-usuario" required>
                         <option value="">Selecione o Usuário</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="select-livro">Livro:</label>
+                    <label for="select-livro">Livro</label>
                     <select name="livro_id" id="select-livro" required>
                         <option value="">Selecione o Livro</option>
                     </select>
                 </div>
                 <div class="form-group-date">
-                    <label for="data-emprestimo">Data de Saída:</label>
+                    <label for="data-emprestimo">Data de Saída</label>
                     <input type="date" name="data_emprestimo" id="data-emprestimo" required>
                 </div>
                 <button type="submit" class="btn-submit-row">Registrar Empréstimo</button>
@@ -64,7 +69,7 @@
         </section>
     </main>
     <footer>
-        <p>&copy; 2026 - All rights reserved</p>
+        <p>&copy; 2026 BiblioTech — All rights reserved</p>
     </footer>
     <script src="./js/emprestimos.js"></script>
 </body>

@@ -1,16 +1,20 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - BiblioTech</title>
+    <title>BiblioTech — Sistema de Gestão de Biblioteca</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/style.css">
     <script src="js/auth.js"></script>
 </head>
 <body>
+
     <header>
         <nav class="navbar">
-            <div class="logo">📚 BiblioTech</div>
+            <div class="logo">BiblioTech</div>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="livros.html">Livros</a></li>
@@ -20,32 +24,225 @@
             </ul>
         </nav>
     </header>
+
+    <section class="hero">
+        <div class="hero-text">
+            <p class="hero-eyebrow">Sistema de Gestão de Biblioteca</p>
+            <h1>
+                Organize seu acervo com<br>
+                <em>elegância e precisão</em>
+            </h1>
+            <p class="hero-sub">
+                O BiblioTech reúne em um só lugar o controle completo do seu acervo, dos leitores cadastrados e dos empréstimos em andamento — tudo em uma interface simples, rápida e agradável de usar.
+            </p>
+            <div class="hero-actions">
+                <a href="livros.html" class="btn-primary">Acessar Acervo</a>
+                <a href="emprestimos.html" class="btn-secondary">Ver Empréstimos</a>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="shelf-board">
+                <div class="books-row">
+                    <div class="book b1"><div class="book-spine"><span class="book-title-spine">Ficção</span></div></div>
+                    <div class="book b2"><div class="book-spine"><span class="book-title-spine">Clássicos</span></div></div>
+                    <div class="book b3"><div class="book-spine"><span class="book-title-spine">Literatura BR</span></div></div>
+                    <div class="book b4"><div class="book-spine"><span class="book-title-spine">Poesia</span></div></div>
+                    <div class="book b5"><div class="book-spine"><span class="book-title-spine">Biografias</span></div></div>
+                    <div class="book b6"><div class="book-spine"><span class="book-title-spine">História</span></div></div>
+                    <div class="book b7"><div class="book-spine"><span class="book-title-spine">Ciências</span></div></div>
+                    <div class="book b8"><div class="book-spine"><span class="book-title-spine">Filosofia</span></div></div>
+                    <div class="book b9"><div class="book-spine"><span class="book-title-spine">Romance</span></div></div>
+                    <div class="book b10"><div class="book-spine"><span class="book-title-spine">Infantil</span></div></div>
+                </div>
+            </div>
+            <p class="bookshelf-caption">Acervo organizado e sempre disponível</p>
+        </div>
+    </section>
+
+    <div class="stats-bar">
+        <div class="stat">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Controle do acervo</span>
+        </div>
+        <div class="stat">
+            <span class="stat-number">+</span>
+            <span class="stat-label">Cadastro de leitores</span>
+        </div>
+        <div class="stat">
+            <span class="stat-number">24/7</span>
+            <span class="stat-label">Acesso ao sistema</span>
+        </div>
+        <div class="stat">
+            <span class="stat-number">⟲</span>
+            <span class="stat-label">Empréstimos e devoluções</span>
+        </div>
+    </div>
+
     <main>
-        <h1>Painel de Controle</h1>
-        <p>Bem-vindo ao sistema de gestão da biblioteca. Escolha uma das operações abaixo:</p>
-        <section class="dashboard-cards">
-            <div class="card">
-                <span class="card-icon">📚</span>
-                <h3>Livros</h3>
-                <p>Gerencie o acervo total.</p>
-                <a href="livros.html" class="btn-link">Acessar</a>
+        <section class="landing-section" id="recursos">
+            <div class="section-header">
+                <p class="section-eyebrow">Por que usar o BiblioTech</p>
+                <h2 class="section-title">Tudo o que sua biblioteca precisa</h2>
+                <p class="section-sub">
+                    Recursos pensados para facilitar o dia a dia da gestão, do cadastro de novos títulos ao controle de devoluções.
+                </p>
             </div>
-            <div class="card">
-                <span class="card-icon">🙋‍♂️</span>
-                <h3>Usuários</h3>
-                <p>Cadastre novos leitores.</p>
-                <a href="usuarios.html" class="btn-link">Acessar</a>
+
+            <div class="features-grid">
+                <article class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                        </svg>
+                    </div>
+                    <h3>Gestão de Acervo</h3>
+                    <p>Cadastre, edite e acompanhe a disponibilidade de cada título da sua coleção em poucos cliques.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <h3>Cadastro de Leitores</h3>
+                    <p>Mantenha os dados dos usuários sempre atualizados, com matrícula, e-mail e histórico de uso.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 1l4 4-4 4"/>
+                            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                            <path d="M7 23l-4-4 4-4"/>
+                            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                        </svg>
+                    </div>
+                    <h3>Controle de Empréstimos</h3>
+                    <p>Registre saídas e devoluções com clareza, acompanhando o status de cada exemplar em tempo real.</p>
+                </article>
             </div>
-            <div class="card">
-                <span class="card-icon">🔄</span>
-                <h3>Empréstimos</h3>
-                <p>Controle saídas e devoluções.</p>
-                <a href="emprestimos.html" class="btn-link">Acessar</a>
+        </section>
+
+        <section class="landing-section steps-section" id="como-funciona">
+            <div class="section-header">
+                <p class="section-eyebrow">Fluxo simples</p>
+                <h2 class="section-title">Como funciona</h2>
+                <p class="section-sub">
+                    Um fluxo direto do cadastro à devolução, sem complicação para quem administra a biblioteca.
+                </p>
+            </div>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">01</div>
+                    <h3>Cadastre o livro</h3>
+                    <p>Adicione título, autor, ano e quantidade de exemplares disponíveis no acervo.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">02</div>
+                    <h3>Cadastre o leitor</h3>
+                    <p>Registre o nome, e-mail e matrícula do usuário que fará parte da biblioteca.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">03</div>
+                    <h3>Registre o empréstimo</h3>
+                    <p>Vincule o leitor ao livro escolhido e defina a data de saída do exemplar.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">04</div>
+                    <h3>Acompanhe a devolução</h3>
+                    <p>Visualize o status de cada empréstimo e finalize a devolução quando o livro retornar.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="quote-section">
+            <blockquote class="quote-text">
+                Uma biblioteca bem organizada é o primeiro passo para que cada leitor encontre, no momento certo, o livro que precisa.
+            </blockquote>
+            <cite class="quote-author">— Equipe BiblioTech</cite>
+        </section>
+
+        <section class="landing-section" id="modulos">
+            <div class="section-header">
+                <p class="section-eyebrow">Acesso rápido</p>
+                <h2 class="section-title">Escolha um módulo para começar</h2>
+                <p class="section-sub">
+                    Navegue diretamente para a área que você precisa gerenciar agora.
+                </p>
+            </div>
+
+            <div class="modules-grid">
+                <a href="livros.html" class="module-card">
+                    <span class="module-icon">📖</span>
+                    <h3>Livros</h3>
+                    <p>Gerencie o acervo total, cadastre novos títulos e controle a disponibilidade de exemplares.</p>
+                    <span class="module-link">Acessar acervo</span>
+                </a>
+                <a href="usuarios.html" class="module-card">
+                    <span class="module-icon">👤</span>
+                    <h3>Usuários</h3>
+                    <p>Cadastre novos leitores e administre as informações de cada membro da biblioteca.</p>
+                    <span class="module-link">Acessar usuários</span>
+                </a>
+                <a href="emprestimos.html" class="module-card">
+                    <span class="module-icon">🔄</span>
+                    <h3>Empréstimos</h3>
+                    <p>Controle saídas e devoluções de livros de forma simples, rápida e organizada.</p>
+                    <span class="module-link">Acessar empréstimos</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <p class="section-eyebrow">Pronto para começar?</p>
+            <h2 class="section-title">Sua biblioteca, organizada do início ao fim</h2>
+            <p class="section-sub">
+                Acesse o painel de livros e dê o primeiro passo para uma gestão mais eficiente do seu acervo.
+            </p>
+            <div class="cta-actions">
+                <a href="livros.html" class="btn-primary">Começar agora</a>
+                <a href="usuarios.html" class="btn-secondary">Cadastrar leitor</a>
             </div>
         </section>
     </main>
+
     <footer>
-        <p>&copy; 2026 - All rights reserved</p>
+        <div class="footer-top">
+            <div>
+                <div class="footer-logo">BiblioTech</div>
+                <p class="footer-desc">Sistema de gestão de biblioteca pensado para simplificar o controle de acervo, leitores e empréstimos em um só lugar.</p>
+            </div>
+
+            <div>
+                <h4 class="footer-col-title">Sistema</h4>
+                <ul class="footer-links">
+                    <li><a href="livros.html">Livros</a></li>
+                    <li><a href="usuarios.html">Usuários</a></li>
+                    <li><a href="emprestimos.html">Empréstimos</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="footer-col-title">Conta</h4>
+                <ul class="footer-links">
+                    <li><a href="login.html">Login</a></li>
+                    <li><a href="cadastro.html">Criar conta</a></li>
+                    <li><a href="redefinir-senha.html">Redefinir senha</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p class="footer-copy">&copy; 2026 BiblioTech — All rights reserved</p>
+        </div>
     </footer>
+
 </body>
 </html>

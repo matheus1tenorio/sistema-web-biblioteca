@@ -1,16 +1,19 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciar Livros - BiblioTech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./css/style.css">
     <script src="js/auth.js"></script>
 </head>
 <body>
     <header>
         <nav class="navbar">
-            <div class="logo">📚 BiblioTech</div>
+            <div class="logo">BiblioTech</div>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="livros.html">Livros</a></li>
@@ -22,7 +25,8 @@
     </header>
 
     <main>
-        <h2>Gerenciamento de Acervo (Livros)</h2>
+        <h2>Gerenciamento de Acervo</h2>
+        <p>Cadastre novos títulos, edite informações existentes e acompanhe a disponibilidade de exemplares.</p>
 
         <section id="form-container">
             <h3 id="form-titulo">Cadastrar Novo Livro</h3>
@@ -69,7 +73,7 @@
                     type="button"
                     id="btn-cancelar"
                     onclick="cancelarEdicao()"
-                    style="display:none; background-color:#95a5a6;"
+                    style="display:none;"
                 >
                     Cancelar
                 </button>
@@ -77,6 +81,7 @@
         </section>
 
         <section id="lista-container">
+            <h3>Acervo Cadastrado</h3>
             <table>
                 <thead>
                     <tr>
@@ -101,7 +106,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2026 - All rights reserved</p>
+        <p>&copy; 2026 BiblioTech — All rights reserved</p>
     </footer>
 
     <script src="./js/livros.js"></script>
