@@ -11,6 +11,12 @@
     <script src="js/auth.js"></script>
 </head>
 <body>
+
+    <button class="theme-toggle" id="theme-toggle" aria-label="Alternar tema">
+        <span class="icon-light">🌙</span>
+        <span class="icon-dark">☀️</span>
+    </button>
+
     <header>
         <nav class="navbar">
             <div class="logo">BiblioTech</div>
@@ -73,4 +79,14 @@
     </footer>
     <script src="./js/emprestimos.js"></script>
 </body>
+
+<script>
+  document.getElementById('theme-toggle').addEventListener('click', function () {
+    const root = document.documentElement;
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('bibliotech-theme', next);
+  });
+</script>
+
 </html>
