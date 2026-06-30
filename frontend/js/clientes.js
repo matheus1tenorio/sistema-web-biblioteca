@@ -1,19 +1,14 @@
-const API_URL = "/api/clientes";
+const API_CLIENTES = "/api/clientes";
 let editandoId = null;
 
-// ── Carregar e renderizar tabela ───────────────────────────────────────────
+// Carregar e renderizar tabela 
 
 async function carregarClientes() {
     try {
-        const res = await authenticatedFetch(API_URL);
+        const res = await authenticatedFetch(API_CLIENTES);
         const clientes = await res.json();
         const tbody = document.getElementById('tabela-clientes-body');
         tbody.innerHTML = '';
-        
-        // Verificar autenticação
-        if (!isAuthenticated() && window.location.pathname !== '/login.html') {
-            window.location.href = 'login.html';
-        }
 
         if (!clientes.length) {
             tbody.innerHTML = '<tr><td colspan="4" style="text-align:center">Nenhum usuário cadastrado.</td></tr>';
@@ -39,7 +34,7 @@ async function carregarClientes() {
     }
 }
 
-// ── Salvar (criar ou atualizar) ────────────────────────────────────────────
+// Salvar (criar ou atualizar) 
 
 async function salvarCliente(e) {
     e.preventDefault();
@@ -50,11 +45,14 @@ async function salvarCliente(e) {
         matricula: form.matricula.value.trim()
     };
 
-    const url    = editandoId ? `${API_URL}/${editandoId}` : API_URL;
+    const url    = editandoId ? `${API_CLIENTES}/${editandoId}` : API_CLIENTES;
     const metodo = editandoId ? 'PUT' : 'POST';
 
     try {
-        const res = await authenticatedFetch(url, { method: metodo, body: JSON.stringify(dados)});
+        const res = await authenticatedFetch(url, {
+            method: metodo,
+            body: JSON.stringify(dados)
+        });
         const data = await res.json();
         if (!res.ok) { alert(data.erro || 'Erro ao salvar usuário.'); return; }
         cancelarEdicao();
@@ -64,7 +62,7 @@ async function salvarCliente(e) {
     }
 }
 
-// ── Preparar edição ────────────────────────────────────────────────────────
+// Preparar edição 
 
 function prepararEdicao(id, nome, email, matricula) {
     editandoId = id;
@@ -88,12 +86,12 @@ function cancelarEdicao() {
     document.getElementById('btn-cancelar').style.display = 'none';
 }
 
-// ── Excluir ────────────────────────────────────────────────────────────────
+// Excluir 
 
 async function deletarCliente(id) {
     if (!confirm('Tem certeza que deseja excluir este usuário?')) return;
     try {
-        const res = await authenticatedFetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        const res = await authenticatedFetch(`${API_CLIENTES}/${id}`, { method: 'DELETE' });
         const data = await res.json();
         if (!res.ok) { alert(data.erro || 'Erro ao excluir usuário.'); return; }
         carregarClientes();
@@ -102,13 +100,13 @@ async function deletarCliente(id) {
     }
 }
 
-// ── Utilitário ─────────────────────────────────────────────────────────────
+// Utilitário 
 
 function esc(str) {
     return String(str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 }
 
-// ── Init ───────────────────────────────────────────────────────────────────
+// Init 
 
 document.getElementById('usuario-form').addEventListener('submit', salvarCliente);
 carregarClientes();

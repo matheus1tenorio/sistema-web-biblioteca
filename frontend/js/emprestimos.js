@@ -2,21 +2,17 @@ const API_EMP = "/api/emprestimos";
 const API_CLI = "/api/clientes";
 const API_LIV = "/api/livros";
 
+// Carregar tabela de empréstimos 
+
 async function carregarEmprestimos() {
     try {
         const res = await authenticatedFetch(API_EMP);
 
-        if (!res.ok) {
-            throw new Error("Erro ao buscar empréstimos");
-        }
+        if (!res.ok) throw new Error("Erro ao buscar empréstimos");
 
         const emprestimos = await res.json();
         const tbody = document.getElementById('tabela-emprestimos-body');
         tbody.innerHTML = '';
-
-        if (!isAuthenticated() && window.location.pathname !== '/login.html') {
-            window.location.href = 'login.html';
-        }
 
         if (!emprestimos.length) {
             tbody.innerHTML = '<tr><td colspan="6" style="text-align:center">Nenhum empréstimo registrado.</td></tr>';
@@ -25,7 +21,6 @@ async function carregarEmprestimos() {
 
         emprestimos.forEach(e => {
             const devolvido = !!e.data_devolucao;
-
             tbody.innerHTML += `
                 <tr>
                     <td>${e.cliente_nome || e.cliente_id}</td>
@@ -49,6 +44,8 @@ async function carregarEmprestimos() {
     }
 }
 
+// Preencher selects 
+
 async function carregarDropdowns() {
     try {
         const [resU, resL] = await Promise.all([
@@ -57,7 +54,7 @@ async function carregarDropdowns() {
         ]);
 
         const usuarios = await resU.json();
-        const livros = await resL.json();
+        const livros   = await resL.json();
 
         const selU = document.getElementById('select-usuario');
         const selL = document.getElementById('select-livro');
@@ -68,32 +65,29 @@ async function carregarDropdowns() {
         });
 
         selL.innerHTML = '<option value="">Selecione o Livro</option>';
-        livros
-            .filter(l => l.disponivel)
-            .forEach(l => {
-                selL.innerHTML += `<option value="${l.id}">${l.titulo} — ${l.autor}</option>`;
-            });
+        livros.filter(l => l.disponivel).forEach(l => {
+            selL.innerHTML += `<option value="${l.id}">${l.titulo} — ${l.autor}</option>`;
+        });
 
     } catch (err) {
         console.error('Erro ao carregar dropdowns:', err);
     }
 }
 
+// Registrar empréstimo 
+
 document.getElementById('emprestimo-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const clienteId = document.getElementById('select-usuario').value;
-    const livroId = document.getElementById('select-livro').value;
-
     const dados = {
-        cliente_id: parseInt(clienteId),
-        livro_id: parseInt(livroId)
+        cliente_id:      parseInt(document.getElementById('select-usuario').value),
+        livro_id:        parseInt(document.getElementById('select-livro').value),
+        data_emprestimo: document.getElementById('data-emprestimo').value
     };
 
     try {
         const res = await authenticatedFetch(API_EMP, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dados)
         });
 
@@ -112,6 +106,8 @@ document.getElementById('emprestimo-form').addEventListener('submit', async (e) 
     }
 });
 
+// Devolver livro 
+
 async function devolverLivro(id) {
     if (!confirm('Confirmar devolução deste livro?')) return;
 
@@ -120,16 +116,12 @@ async function devolverLivro(id) {
     try {
         const res = await authenticatedFetch(`${API_EMP}/${id}/devolver`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ data_devolucao: hoje })
         });
 
         const data = await res.json();
 
-        if (!res.ok) {
-            alert(data.erro || 'Erro ao registrar devolução.');
-            return;
-        }
+        if (!res.ok) { alert(data.erro || 'Erro ao registrar devolução.'); return; }
 
         await Promise.all([carregarEmprestimos(), carregarDropdowns()]);
 
@@ -137,21 +129,18 @@ async function devolverLivro(id) {
         alert('Erro ao conectar com o serviço de empréstimos.');
     }
 }
+
+// Excluir empréstimo 
 
 async function excluirEmprestimo(id) {
     if (!confirm('Excluir este empréstimo?')) return;
 
     try {
-        const res = await authenticatedFetch(`${API_EMP}/${id}`, {
-            method: 'DELETE'
-        });
+        const res = await authenticatedFetch(`${API_EMP}/${id}`, { method: 'DELETE' });
 
         const data = await res.json();
 
-        if (!res.ok) {
-            alert(data.erro || 'Erro ao excluir.');
-            return;
-        }
+        if (!res.ok) { alert(data.erro || 'Erro ao excluir.'); return; }
 
         await Promise.all([carregarEmprestimos(), carregarDropdowns()]);
 
@@ -159,12 +148,16 @@ async function excluirEmprestimo(id) {
         alert('Erro ao conectar com o serviço de empréstimos.');
     }
 }
+
+// Utilitário 
 
 function formatarData(dataStr) {
     if (!dataStr) return '-';
     const [ano, mes, dia] = dataStr.split('T')[0].split('-');
     return `${dia}/${mes}/${ano}`;
 }
+
+// Init 
 
 carregarEmprestimos();
 carregarDropdowns();

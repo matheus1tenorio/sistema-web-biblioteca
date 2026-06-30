@@ -1,46 +1,26 @@
-const API_URL = '/api/clientes';
-
 async function fazerLogin(email, senha) {
     try {
-        const response = await fetch(`${API_URL}/login`, {
+        const response = await fetch('/api/clientes/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                email,
-                senha
-            })
+            body: JSON.stringify({ email, senha })
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(
-                data.erro || 'Erro no login'
-            );
+            throw new Error(data.erro || 'Erro no login');
         }
 
-        localStorage.setItem(
-            'token',
-            data.access_token
-        );
+        localStorage.setItem('token', data.access_token);
+        localStorage.setItem('user', JSON.stringify(data.user));
 
-        localStorage.setItem(
-            'user',
-            JSON.stringify(data.user)
-        );
-
-        return {
-            success: true,
-            user: data.user
-        };
+        return { success: true, user: data.user };
 
     } catch (error) {
-        return {
-            success: false,
-            error: error.message
-        };
+        return { success: false, error: error.message };
     }
 }
 
@@ -75,7 +55,6 @@ function isAuthenticated() {
     return getToken() !== null;
 }
 
-// Bloqueio de acesso por permissão
 function requireAdmin() {
     if (!isAdmin()) {
         alert('Acesso restrito a administradores');
@@ -86,10 +65,7 @@ function requireAdmin() {
 async function authenticatedFetch(url, options = {}) {
     const token = getToken();
 
-    if (
-        !token &&
-        !window.location.pathname.includes('login.html')
-    ) {
+    if (!token && !window.location.pathname.includes('login.html')) {
         window.location.href = 'login.html';
         throw new Error('Não autenticado');
     }
