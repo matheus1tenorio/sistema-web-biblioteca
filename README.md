@@ -172,3 +172,109 @@ docker ps
 ```
 http://localhost:8080/index.html
 ```
+
+---
+
+## 🏗️ Diagrama
+
+O sistema segue uma **arquitetura de microsserviços** com separação clara de responsabilidades.
+
+
+```mermaid
+flowchart TD
+    subgraph "Frontend (Nginx)"
+        UI[Interface Web HTML/CSS/JS]
+        NGINX[Nginx - API Gateway + Static Server\n Porta 8080]
+    end
+
+    subgraph "Microsserviços Backend"
+        CLIENTE[Cliente Service\nFlask + MVC\nPorta 5001]
+        LIVRO[Livro Service\nFlask + MVC\nPorta 5002]
+        EMPRESTIMO[Emprestimo Service\nFlask + MVC\nPorta 5003]
+    end
+
+    subgraph "Banco de Dados"
+        MYSQL[(MySQL 8.0\nPorta 3306\nTabelas: cliente, livro, emprestimo)]
+    end
+
+    %% Fluxos
+    UI --> NGINX
+    NGINX --> CLIENTE
+    NGINX --> LIVRO
+    NGINX --> EMPRESTIMO
+    
+    CLIENTE <--> MYSQL
+    LIVRO <--> MYSQL
+    EMPRESTIMO <--> MYSQL
+    EMPRESTIMO --> LIVRO
+
+    %% Estilos (Cores)
+    classDef frontend fill:#a78bfa,stroke:#4c1d95,color:#fff
+    classDef service fill:#4ade80,stroke:#166534,color:#000
+    classDef db fill:#60a5fa,stroke:#1e40af,color:#000
+
+    class UI,NGINX frontend
+    class CLIENTE,LIVRO,EMPRESTIMO service
+    class MYSQL db
+```
+
+Descrição Detalhada do Fluxo
+
+- Usuário acessa http://localhost:8080 → Nginx serve arquivos estáticos e proxyia APIs.
+- Autenticação é feita via Cliente Service (JWT gerado e validado).
+- Empréstimos consultam Livro Service para verificar/atualizar disponibilidade.
+- Todos os serviços compartilham o mesmo banco MySQL via rede Docker.
+- Setas mostram o fluxo de requisições e comunicação entre serviços.
+
+---
+
+## 📁 Estrutura Completa de Pastas do Projeto
+
+A estrutura segue exatamente o que você mostrou nas imagens:
+
+```bash
+sistema-web-biblioteca/
+├── cliente-service/
+│   ├── controllers/
+│   │   └── cliente_controller.py
+│   ├── models/
+│   │   └── cliente_model.py
+│   ├── routes/
+│   │   └── cliente_routes.py
+│   ├── app.py
+│   ├── auth.py
+│   ├── config.py
+│   ├── Dockerfile
+│   └── requirements.txt
+├── emprestimo-service/
+│   ├── controllers/
+│   │   └── emprestimo_controller.py
+│   ├── models/
+│   │   └── emprestimo_model.py
+│   ├── routes/
+│   │   └── emprestimo_routes.py
+│   ├── app.py, config.py, Dockerfile, requirements.txt
+├── livro-service/
+│   ├── controllers/
+│   │   └── livro_controller.py
+│   ├── models/
+│   │   └── livro_model.py
+│   ├── routes/
+│   │   └── livro_routes.py
+│   ├── app.py, config.py, Dockerfile, requirements.txt
+├── frontend/
+│   ├── css/
+│   │   └── style.css
+│   ├── imagens/
+│   ├── js/
+│   │   ├── auth.js, clientes.js, emprestimos.js, livros.js, main.js, theme.js
+│   ├── videos/
+│   ├── *.html (base, cadastro, emprestimos, index, livros, login...)
+│   ├── nginx.conf
+│   └── Dockerfile
+├── database/
+│   └── init.sql
+├── docker-compose.yml
+├── .gitignore
+├── README.md
+```
