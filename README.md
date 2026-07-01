@@ -256,48 +256,92 @@ Descrição Detalhada do Fluxo
 ## 📁 Estrutura Completa de Pastas do Projeto
 
 ```bash
-sistema-web-biblioteca/
-├── cliente-service/
-│   ├── controllers/
-│   │   └── cliente_controller.py
-│   ├── models/
-│   │   └── cliente_model.py
-│   ├── routes/
-│   │   └── cliente_routes.py
-│   ├── app.py
-│   ├── auth.py
-│   ├── config.py
-│   ├── Dockerfile
-│   └── requirements.txt
-├── emprestimo-service/
-│   ├── controllers/
-│   │   └── emprestimo_controller.py
-│   ├── models/
-│   │   └── emprestimo_model.py
-│   ├── routes/
-│   │   └── emprestimo_routes.py
-│   ├── app.py, config.py, Dockerfile, requirements.txt
-├── livro-service/
-│   ├── controllers/
-│   │   └── livro_controller.py
-│   ├── models/
-│   │   └── livro_model.py
-│   ├── routes/
-│   │   └── livro_routes.py
-│   ├── app.py, config.py, Dockerfile, requirements.txt
-├── frontend/
-│   ├── css/
-│   │   └── style.css
-│   ├── imagens/
-│   ├── js/
-│   │   ├── auth.js, clientes.js, emprestimos.js, livros.js, main.js, theme.js
-│   ├── videos/
-│   ├── *.html (base, cadastro, emprestimos, index, livros, login...)
-│   ├── nginx.conf
-│   └── Dockerfile
-├── database/
-│   └── init.sql
-├── docker-compose.yml
-├── .gitignore
-├── README.md
+└───sistema-web-biblioteca
+    │   .gitignore
+    │   docker-compose.yml
+    │   README.md
+    │   
+    ├───.github
+    │   └───workflows
+    │           ci-cd.yml
+    │           
+    ├───cliente-service
+    │   │   app.py
+    │   │   auth.py
+    │   │   config.py
+    │   │   Dockerfile
+    │   │   requirements.txt
+    │   │   
+    │   ├───controllers
+    │   │       cliente_controller.py
+    │   │       
+    │   ├───models
+    │   │       cliente_model.py
+    │   │       
+    │   └───routes
+    │           cliente_routes.py
+    │           
+    ├───database
+    │       init.sql
+    │       
+    ├───emprestimo-service
+    │   │   app.py
+    │   │   config.py
+    │   │   Dockerfile
+    │   │   requirements.txt
+    │   │   
+    │   ├───controllers
+    │   │       emprestimo_controller.py
+    │   │       
+    │   ├───models
+    │   │       emprestimo_model.py
+    │   │       
+    │   └───routes
+    │           emprestimo_routes.py
+    │           
+    ├───frontend
+    │   │   base.html
+    │   │   cadastro.html
+    │   │   Dockerfile
+    │   │   emprestimos.html
+    │   │   esqueci-senha.html
+    │   │   index.html
+    │   │   livros.html
+    │   │   login.html
+    │   │   nginx.conf
+    │   │   redefinir-senha.html
+    │   │   usuarios.html
+    │   │   
+    │   ├───css
+    │   │       style.css
+    │   │       
+    │   ├───imagens
+    │   │       Adobe Express - file.jpg
+    │   │       pessoa-lendo-livro-biblioteca.jpg
+    │   │       
+    │   ├───js
+    │   │       auth.js
+    │   │       clientes.js
+    │   │       emprestimos.js
+    │   │       livros.js
+    │   │       main.js
+    │   │       theme.js
+    │   │       
+    │   └───videos
+    │           biblioteca1.mp4
+    │           
+    └───livro-service
+        │   app.py
+        │   config.py
+        │   Dockerfile
+        │   requirements.txt
+        │   
+        ├───controllers
+        │       livro_controller.py
+        │       
+        ├───models
+        │       livro_model.py
+        │       
+        └───routes
+                livro_routes.py
 ```
