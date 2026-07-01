@@ -1,0 +1,54 @@
+name: CI/CD - BiblioTech
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+
+  integration-test:
+    name: Build + Teste de integração (Docker Compose)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Subir serviços com Docker Compose
+        run: docker compose up -d --build
+
+      - name: Aguardar frontend ficar disponível
+        run: |
+          echo "Aguardando serviços..."
+          for i in {1..30}; do
+            if curl -f http://localhost:8080 > /dev/null 2>&1; then
+              echo "Frontend está no ar!"
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "Frontend não respondeu a tempo"
+          docker compose logs
+          exit 1
+
+      - name: Testar cliente-service
+        run: curl --fail http://localhost:5001/ || true
+
+      - name: Testar livro-service
+        run: curl --fail http://localhost:5002/ || true
+
+      - name: Testar emprestimo-service
+        run: curl --fail http://localhost:5003/ || true
+
+      - name: Logs em caso de erro
+        if: failure()
+        run: docker compose logs
+
+      - name: Derrubar containers
+        if: always()
+        run: docker compose down -v
