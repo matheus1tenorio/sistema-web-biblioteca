@@ -1,6 +1,7 @@
 import os
 import requests
 from datetime import datetime
+from flask import request as flask_request
 
 from models.emprestimo_model import (
     get_all_emprestimos,
@@ -34,13 +35,11 @@ def criar_emprestimo(data):
     if not cliente_id or not livro_id:
         return {"erro": "cliente_id e livro_id são obrigatórios"}, 400
 
-    # REGRA 1: Máximo de 3 empréstimos ativos
     if contar_emprestimos_ativos(cliente_id) >= 3:
         return {
             "erro": "O usuário já possui 3 empréstimos ativos"
         }, 400
 
-    # REGRA 2: Não pode pegar o mesmo livro duas vezes
     if possui_livro_emprestado(cliente_id, livro_id):
         return {
             "erro": "O usuário já possui este livro emprestado"
@@ -48,22 +47,37 @@ def criar_emprestimo(data):
 
     data_emprestimo = datetime.now().date().isoformat()
 
+    token = flask_request.headers.get("Authorization")
+    headers = {"Authorization": token} if token else {}
+
     try:
         resp_cliente = requests.get(
             f"{CLIENTE_SERVICE_URL}/clientes/{cliente_id}",
+            headers=headers,
             timeout=5
         )
 
         if resp_cliente.status_code == 404:
             return {"erro": "Cliente não encontrado"}, 404
 
+        if resp_cliente.status_code != 200:
+            return {
+                "erro": "Não foi possível validar o cliente"
+            }, resp_cliente.status_code
+
         resp_livro = requests.get(
             f"{LIVRO_SERVICE_URL}/livros/{livro_id}",
+            headers=headers,
             timeout=5
         )
 
         if resp_livro.status_code == 404:
             return {"erro": "Livro não encontrado"}, 404
+
+        if resp_livro.status_code != 200:
+            return {
+                "erro": "Não foi possível validar o livro"
+            }, resp_livro.status_code
 
         livro = resp_livro.json()
 
@@ -86,6 +100,7 @@ def criar_emprestimo(data):
     try:
         requests.put(
             f"{LIVRO_SERVICE_URL}/livros/{livro_id}/reduzir",
+            headers=headers,
             timeout=5
         )
     except requests.exceptions.RequestException:
@@ -105,7 +120,6 @@ def devolver_livro(emprestimo_id, data):
     if not emprestimo:
         return {"erro": "Empréstimo não encontrado"}, 404
 
-    # REGRA 3: Só pode finalizar se ainda não foi devolvido
     if emprestimo.get("data_devolucao"):
         return {"erro": "Este livro já foi devolvido"}, 400
 
@@ -114,9 +128,13 @@ def devolver_livro(emprestimo_id, data):
         data_devolucao
     )
 
+    token = flask_request.headers.get("Authorization")
+    headers = {"Authorization": token} if token else {}
+
     try:
         requests.put(
             f"{LIVRO_SERVICE_URL}/livros/{emprestimo['livro_id']}/aumentar",
+            headers=headers,
             timeout=5
         )
     except requests.exceptions.RequestException:
@@ -132,9 +150,13 @@ def remover_emprestimo(emprestimo_id):
         return {"erro": "Empréstimo não encontrado"}, 404
 
     if not emprestimo.get("data_devolucao"):
+        token = flask_request.headers.get("Authorization")
+        headers = {"Authorization": token} if token else {}
+
         try:
             requests.put(
                 f"{LIVRO_SERVICE_URL}/livros/{emprestimo['livro_id']}/aumentar",
+                headers=headers,
                 timeout=5
             )
         except requests.exceptions.RequestException:
