@@ -1,12 +1,55 @@
 const API_CLIENTES = "/api/clientes";
+const CACHE_KEY = "cache_clientes";
+const CACHE_TIME = 5 * 60 * 1000; // 5 minutos
+
 let editandoId = null;
 
-// Carregar e renderizar tabela 
+// cache
+function salvarCache(clientes) {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({
+        data: clientes,
+        timestamp: Date.now()
+    }));
+}
+
+function obterCache() {
+    const cache = localStorage.getItem(CACHE_KEY);
+
+    if (!cache) return null;
+
+    const dados = JSON.parse(cache);
+
+    if (Date.now() - dados.timestamp > CACHE_TIME) {
+        localStorage.removeItem(CACHE_KEY);
+        return null;
+    }
+
+    return dados.data;
+}
+
+function limparCache() {
+    localStorage.removeItem(CACHE_KEY);
+}
+
+// Carregar e renderizar tabela
 
 async function carregarClientes() {
     try {
-        const res = await authenticatedFetch(API_CLIENTES);
-        const clientes = await res.json();
+
+        let clientes = obterCache();
+
+        if (!clientes) {
+            const res = await authenticatedFetch(API_CLIENTES);
+
+            if (!res.ok) {
+                throw new Error("Erro ao carregar clientes");
+            }
+
+            clientes = await res.json();
+
+            salvarCache(clientes);
+        }
+
         const tbody = document.getElementById('tabela-clientes-body');
         tbody.innerHTML = '';
 
@@ -27,6 +70,7 @@ async function carregarClientes() {
                     </td>
                 </tr>`;
         });
+
     } catch (err) {
         console.error('Erro ao carregar clientes:', err);
         document.getElementById('tabela-clientes-body').innerHTML =
@@ -34,45 +78,59 @@ async function carregarClientes() {
     }
 }
 
-// Salvar (criar ou atualizar) 
+// Salvar (criar ou atualizar)
 
 async function salvarCliente(e) {
     e.preventDefault();
+
     const form = e.target;
+
     const dados = {
-        nome:      form.nome_usuario.value.trim(),
-        email:     form.email_usuario.value.trim(),
+        nome: form.nome_usuario.value.trim(),
+        email: form.email_usuario.value.trim(),
         matricula: form.matricula.value.trim()
     };
 
-    const url    = editandoId ? `${API_CLIENTES}/${editandoId}` : API_CLIENTES;
+    const url = editandoId ? `${API_CLIENTES}/${editandoId}` : API_CLIENTES;
     const metodo = editandoId ? 'PUT' : 'POST';
 
     try {
+
         const res = await authenticatedFetch(url, {
             method: metodo,
             body: JSON.stringify(dados)
         });
+
         const data = await res.json();
-        if (!res.ok) { alert(data.erro || 'Erro ao salvar usuário.'); return; }
+
+        if (!res.ok) {
+            alert(data.erro || 'Erro ao salvar usuário.');
+            return;
+        }
+
+        limparCache();
+
         cancelarEdicao();
         carregarClientes();
+
     } catch (err) {
         alert('Erro ao conectar com o serviço de usuários.');
     }
 }
 
-// Preparar edição 
+// Preparar edição
 
 function prepararEdicao(id, nome, email, matricula) {
     editandoId = id;
-    const form = document.getElementById('usuario-form');
-    form.nome_usuario.value  = nome;
-    form.email_usuario.value = email;
-    form.matricula.value     = matricula;
 
-    document.getElementById('form-titulo').innerText       = 'Editar Usuário';
-    document.getElementById('btn-salvar').innerText        = 'Atualizar Usuário';
+    const form = document.getElementById('usuario-form');
+
+    form.nome_usuario.value = nome;
+    form.email_usuario.value = email;
+    form.matricula.value = matricula;
+
+    document.getElementById('form-titulo').innerText = 'Editar Usuário';
+    document.getElementById('btn-salvar').innerText = 'Atualizar Usuário';
     document.getElementById('btn-cancelar').style.display = 'inline-block';
 
     form.scrollIntoView({ behavior: 'smooth' });
@@ -80,33 +138,51 @@ function prepararEdicao(id, nome, email, matricula) {
 
 function cancelarEdicao() {
     editandoId = null;
+
     document.getElementById('usuario-form').reset();
-    document.getElementById('form-titulo').innerText       = 'Cadastrar Novo Usuário';
-    document.getElementById('btn-salvar').innerText        = 'Cadastrar Usuário';
+
+    document.getElementById('form-titulo').innerText = 'Cadastrar Novo Usuário';
+    document.getElementById('btn-salvar').innerText = 'Cadastrar Usuário';
     document.getElementById('btn-cancelar').style.display = 'none';
 }
 
-// Excluir 
+// Excluir
 
 async function deletarCliente(id) {
+
     if (!confirm('Tem certeza que deseja excluir este usuário?')) return;
+
     try {
-        const res = await authenticatedFetch(`${API_CLIENTES}/${id}`, { method: 'DELETE' });
+
+        const res = await authenticatedFetch(`${API_CLIENTES}/${id}`, {
+            method: 'DELETE'
+        });
+
         const data = await res.json();
-        if (!res.ok) { alert(data.erro || 'Erro ao excluir usuário.'); return; }
+
+        if (!res.ok) {
+            alert(data.erro || 'Erro ao excluir usuário.');
+            return;
+        }
+
+        limparCache();
+
         carregarClientes();
+
     } catch (err) {
         alert('Erro ao conectar com o serviço de usuários.');
     }
 }
 
-// Utilitário 
+// Utilitário
 
 function esc(str) {
-    return String(str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    return String(str || '')
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, "\\'");
 }
 
-// Init 
+// Init
 
 document.getElementById('usuario-form').addEventListener('submit', salvarCliente);
 carregarClientes();

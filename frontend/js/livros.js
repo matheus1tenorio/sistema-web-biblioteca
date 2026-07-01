@@ -1,19 +1,62 @@
 const API_LIVROS = "/api/livros";
+const CACHE_KEY = "cache_livros";
+const CACHE_TIME = 5 * 60 * 1000; // 5 minutos
+
 let editandoId = null;
 
-//  Carregar e renderizar tabela 
+// ==========================
+// Cache
+// ==========================
+
+function salvarCache(livros) {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({
+        data: livros,
+        timestamp: Date.now()
+    }));
+}
+
+function obterCache() {
+    const cache = localStorage.getItem(CACHE_KEY);
+
+    if (!cache) return null;
+
+    const dados = JSON.parse(cache);
+
+    if (Date.now() - dados.timestamp > CACHE_TIME) {
+        localStorage.removeItem(CACHE_KEY);
+        return null;
+    }
+
+    return dados.data;
+}
+
+function limparCache() {
+    localStorage.removeItem(CACHE_KEY);
+}
+
+// ==========================
+// Carregar e renderizar tabela
+// ==========================
 
 async function carregarLivros() {
     const tbody = document.getElementById("tabela-livros-body");
 
     try {
-        const response = await authenticatedFetch(API_LIVROS);
 
-        if (!response.ok) {
-            throw new Error("Erro ao carregar livros");
+        let livros = obterCache();
+
+        if (!livros) {
+
+            const response = await authenticatedFetch(API_LIVROS);
+
+            if (!response.ok) {
+                throw new Error("Erro ao carregar livros");
+            }
+
+            livros = await response.json();
+
+            salvarCache(livros);
         }
-
-        const livros = await response.json();
 
         tbody.innerHTML = "";
 
@@ -42,8 +85,20 @@ async function carregarLivros() {
                                 ${l.ano || "null"},
                                 ${l.quantidade}
                             )">Editar</button>
-                            <button onclick="deletarLivro(${l.id})" style="background:#e74c3c">Excluir</button>
-                        ` : `<span style="color:#888">Somente leitura</span>`}
+
+                            <button
+                                onclick="deletarLivro(${l.id})"
+                                style="background:#e74c3c"
+                            >
+                                Excluir
+                            </button>
+                        `
+                        :
+                        `
+                            <span style="color:#888">
+                                Somente leitura
+                            </span>
+                        `}
                     </td>
                 </tr>
             `;
@@ -51,14 +106,17 @@ async function carregarLivros() {
 
     } catch (err) {
         console.error("Erro ao carregar livros:", err);
+
         tbody.innerHTML =
             '<tr><td colspan="6" style="color:red;text-align:center">Erro ao conectar com o serviço de livros.</td></tr>';
     }
 }
 
-// Salvar (criar ou atualizar) 
+// ==========================
+// Salvar (criar ou atualizar)
 
 document.getElementById("livro-form").addEventListener("submit", async (e) => {
+
     e.preventDefault();
 
     if (!isAdmin()) {
@@ -67,16 +125,22 @@ document.getElementById("livro-form").addEventListener("submit", async (e) => {
     }
 
     const dados = {
-        titulo:     e.target.titulo.value.trim(),
-        autor:      e.target.autor.value.trim(),
-        ano:        e.target.ano.value ? parseInt(e.target.ano.value) : null,
+        titulo: e.target.titulo.value.trim(),
+        autor: e.target.autor.value.trim(),
+        ano: e.target.ano.value ? parseInt(e.target.ano.value) : null,
         quantidade: e.target.quantidade.value ? parseInt(e.target.quantidade.value) : 0
     };
 
-    const url    = editandoId ? `${API_LIVROS}/${editandoId}` : API_LIVROS;
-    const metodo = editandoId ? "PUT" : "POST";
+    const url = editandoId
+        ? `${API_LIVROS}/${editandoId}`
+        : API_LIVROS;
+
+    const metodo = editandoId
+        ? "PUT"
+        : "POST";
 
     try {
+
         const response = await authenticatedFetch(url, {
             method: metodo,
             body: JSON.stringify(dados)
@@ -89,17 +153,21 @@ document.getElementById("livro-form").addEventListener("submit", async (e) => {
             return;
         }
 
+        limparCache();
+
         cancelarEdicao();
         carregarLivros();
 
     } catch (err) {
         alert("Erro ao conectar com o serviço de livros.");
     }
+
 });
 
-// Preparar edição 
+// Preparar edição
 
 function prepararEdicao(id, titulo, autor, ano, quantidade) {
+
     if (!isAdmin()) {
         alert("Apenas administradores podem editar livros.");
         return;
@@ -108,40 +176,64 @@ function prepararEdicao(id, titulo, autor, ano, quantidade) {
     editandoId = id;
 
     const form = document.getElementById("livro-form");
-    form.titulo.value     = titulo;
-    form.autor.value      = autor;
-    form.ano.value        = ano !== null ? ano : "";
+
+    form.titulo.value = titulo;
+    form.autor.value = autor;
+    form.ano.value = ano !== null ? ano : "";
     form.quantidade.value = quantidade;
 
-    document.getElementById("form-titulo").innerText       = "Editar Livro";
-    document.getElementById("btn-salvar").innerText        = "Atualizar Livro";
-    document.getElementById("btn-cancelar").style.display = "inline-block";
+    document.getElementById("form-titulo").innerText =
+        "Editar Livro";
 
-    form.scrollIntoView({ behavior: "smooth" });
+    document.getElementById("btn-salvar").innerText =
+        "Atualizar Livro";
+
+    document.getElementById("btn-cancelar").style.display =
+        "inline-block";
+
+    form.scrollIntoView({
+        behavior: "smooth"
+    });
+
 }
 
+// Cancelar edição
+
 function cancelarEdicao() {
+
     editandoId = null;
 
     document.getElementById("livro-form").reset();
+
     document.getElementById("quantidade").value = 1;
 
-    document.getElementById("form-titulo").innerText       = "Cadastrar Novo Livro";
-    document.getElementById("btn-salvar").innerText        = "Salvar Livro";
-    document.getElementById("btn-cancelar").style.display = "none";
+    document.getElementById("form-titulo").innerText =
+        "Cadastrar Novo Livro";
+
+    document.getElementById("btn-salvar").innerText =
+        "Salvar Livro";
+
+    document.getElementById("btn-cancelar").style.display =
+        "none";
+
 }
 
-// Excluir 
+// Excluir
+
 
 async function deletarLivro(id) {
+
     if (!isAdmin()) {
         alert("Apenas administradores podem excluir livros.");
         return;
     }
 
-    if (!confirm("Tem certeza que deseja excluir este livro?")) return;
+    if (!confirm("Tem certeza que deseja excluir este livro?")) {
+        return;
+    }
 
     try {
+
         const response = await authenticatedFetch(`${API_LIVROS}/${id}`, {
             method: "DELETE"
         });
@@ -153,14 +245,19 @@ async function deletarLivro(id) {
             return;
         }
 
+        limparCache();
+
         carregarLivros();
 
     } catch (err) {
+
         alert("Erro ao conectar com o serviço de livros.");
+
     }
+
 }
 
-// Utilitário 
+// Utilitário
 
 function esc(str) {
     return String(str || "")
@@ -168,6 +265,6 @@ function esc(str) {
         .replace(/'/g, "\\'");
 }
 
-// Init 
+// Init
 
 carregarLivros();
