@@ -69,6 +69,8 @@ Este sistema foi feito para ser executado em sua IDE de preferência ou na Nuvem
 - MVC
 - Comunicação HTTP entre serviços
 
+### CI/CD
+- GitHub Actions
 ---
 
 ## 🏗 Arquitetura do Sistema
@@ -100,6 +102,29 @@ Cada microsserviço possui:
 - Estrutura MVC própria  
 - Dockerfile individual  
 - Dependências isoladas  
+
+---
+
+##  CI/CD (GitHub Actions)
+
+O pipeline roda automaticamente em cada push:
+
+### Etapas:
+
+**1. Build**
+- Criação das imagens Docker dos serviços
+
+**2. Integração**
+- Sobe todo o sistema com Docker Compose
+- Aguarda inicialização
+
+**3. Testes**
+- Verifica frontend
+- Testa APIs dos microsserviços via HTTP
+
+Se tudo funcionar:
+ pipeline aprovada  
+ qualquer falha quebra o build
 
 ---
 
@@ -229,8 +254,6 @@ Descrição Detalhada do Fluxo
 ---
 
 ## 📁 Estrutura Completa de Pastas do Projeto
-
-A estrutura segue exatamente o que você mostrou nas imagens:
 
 ```bash
 sistema-web-biblioteca/
