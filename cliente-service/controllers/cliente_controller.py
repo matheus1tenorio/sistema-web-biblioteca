@@ -77,9 +77,10 @@ def login_cliente(dados):
             "erro": "Senha inválida"
         }, 401
 
-    token = gerar_token(cliente["id"])
-
     role = cliente.get("role", "cliente")
+
+    # Gera token incluindo role
+    token = gerar_token(cliente["id"], role)
 
     return {
         "access_token": token,

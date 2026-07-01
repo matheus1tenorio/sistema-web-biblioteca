@@ -20,8 +20,12 @@ CLIENTE_SERVICE_URL = "http://cliente-service:5000"
 
 def buscar_cliente(user_id):
     try:
+        token = request.headers.get("Authorization")
+        headers = {"Authorization": token} if token else {}
+
         resp = requests.get(
             f"{CLIENTE_SERVICE_URL}/clientes/{user_id}",
+            headers=headers,
             timeout=5
         )
 

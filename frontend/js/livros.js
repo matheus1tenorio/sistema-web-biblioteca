@@ -1,7 +1,7 @@
 const API_LIVROS = "/api/livros";
 let editandoId = null;
 
-// Carregar e renderizar tabela 
+//  Carregar e renderizar tabela 
 
 async function carregarLivros() {
     const tbody = document.getElementById("tabela-livros-body");
@@ -168,6 +168,6 @@ function esc(str) {
         .replace(/'/g, "\\'");
 }
 
-// Init
+// Init 
 
 carregarLivros();

@@ -19,7 +19,8 @@ def verificar_senha(hash_senha, senha):
     )
 
 
-def gerar_token(cliente_id):
+def gerar_token(cliente_id, role='cliente'):
     return create_access_token(
-        identity=str(cliente_id)
+        identity=str(cliente_id),
+        additional_claims={'role': role}
     )

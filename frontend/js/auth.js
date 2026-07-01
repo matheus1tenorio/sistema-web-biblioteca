@@ -72,6 +72,8 @@ async function authenticatedFetch(url, options = {}) {
 
     const headers = {
         'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
         ...options.headers
     };
 
@@ -81,7 +83,8 @@ async function authenticatedFetch(url, options = {}) {
 
     const response = await fetch(url, {
         ...options,
-        headers
+        headers,
+        cache: 'no-store'
     });
 
     if (response.status === 401) {
